@@ -30,7 +30,10 @@ export default new Vuex.Store({
   mutations: {
   },
   actions: {
+
   },
-  modules: {
-  }
+  getters: {
+    //coffeeListのidとparams.idが一致したものを返す
+    getItem: (state) => (id) => state.coffeeList.find((item) => item.ID === id),
+    } 
 })
