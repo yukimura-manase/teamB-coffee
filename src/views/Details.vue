@@ -4,10 +4,10 @@
 
         <div><img :src="itemdetails.imageURL"> </div>
         <div>{{itemdetails.name}}</div>
-        <div>{{itemdetails.content}}</div>
+        <div>{{itemdetails.contents}}</div>
         【サイズ】
         <!-- v-model追加する -->
-        <div>M: {{ itemdetails.priceM }}●●円(税抜)</div>
+        <div>M: {{ itemdetails.priceM }}円(税抜)</div>
         【トッピング】
         <!--v-forでチェックボックス作成 
             <div> 
@@ -26,7 +26,7 @@
                 <option>9</option>
                 <option>10</option>
             </select>
-        <div>L:{{ itemdetails.priceL }}●●円(税抜)</div>
+        <div>L:{{ itemdetails.priceL }}円(税抜)</div>
         数量：<select v-model="countL">
                 <option>0</option>
                 <option>1</option>
@@ -67,10 +67,11 @@ export default {
     created(){
         //this.$route.params.idは選択された商品のid
         //gettersによってstateの配列のなかからidが一致したデータを取得
-        // const getItem = this.getItem(this.$route.paeams.id);
-        // if(getItem){
-        //     this.itemdetails = getItem
-        // }
+        const getItem = this.$store.getters.getItem(this.$route.params.id);
+        console.log(getItem)
+        if(getItem){
+            this.itemdetails = getItem
+        }
 
     },
     methods:{
@@ -82,7 +83,8 @@ export default {
     },
     computed:{
         totalPrice(){
-            return this.itemdetails.priceM * this.countM + this.itemdetails.priceL * this.countL * 1.1
+            const total = (this.itemdetails.priceM * this.countM + this.itemdetails.priceL * this.countL) * 1.1
+            return Math.floor(total)
         },
        
     }
