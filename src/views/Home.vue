@@ -19,7 +19,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in coffeelist" :key="item.id">
+        <tr v-for="item in getlist " :key="item.id">
           <th>{{item.ID}}</th>
           <th>{{item.name}}</th>
           <th>{{item.contents}}</th>
@@ -43,13 +43,21 @@
         coffeelist:[],
         url:require('@/assets/img_coffee/header_logo.png'),
         search:''
-      }
-    },
-    created(){
+       }
+     },
+      created(){
       console.log('画面表示します！');
       this.coffeelist = this.$store.state.coffeeList
       console.log(this.coffeelist);
     },
-
+    computed:{
+      getlist(){
+        const coffeeList  = this.$store.state.coffeeList
+        return coffeeList.filter((item) => {
+        return item.name.match(this.search)
+      })
+      }
+    }
   }
+
 </script>
