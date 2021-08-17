@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -25,12 +26,32 @@ export default new Vuex.Store({
       {ID:17, name:'ナッティホワイトモカ', contents:'ホワイトチョコレートとヘーゼルナッツに香り高いエスプレッソを加えた風味豊かなホワイト モカ。ホイップクリームをツリーに見立て、ナッツ&ホワイトチョコレートソースのリボンと、3色のチョコレート、シルバーのアラザンをイルミネーションのようにちりばめました。ホリデーシーズンにぴったりのあたたかな一杯で、特別なひと時をお楽しみください。', priceM:450, priceL:570, imageURL:'17.jpg'},
       {ID:18, name:'ジンジャーブレッドラテ', contents:'スターバックスのホリデーといえばやっぱりジンジャーブレッド ラテ、という人も多いのではないでしょうか。ジンジャーブレッドクッキーをイメージした、ほんのり甘くてスパイシーな風味は、この時期にしか味わえない特別なビバレッジです。体の中からじんわりとあたためてくれる一杯で、ほっとリラックスしたひと時をお過ごしください。', priceM:450, priceL:570, imageURL:'18.jpg'},
   ],
-  
+    login_user:null
   },
   mutations: {
+    setLoginUser (state,user){
+      state.login_user = user 
+    },
+    deleteLoginUser(state,){
+      state.login_user = null
+    }
   },
   actions: {
-
+    setLoginUser({commit},user){
+      commit('setLoginUser',user)
+    },
+    login(){
+      //Googleプロジェクトオブジェクトのインスタンスの作成
+      const google_auth_provider = new firebase.auth.GoogleAuthProvider()
+      //ログインページ（google）のにリダイレクトしてログインする為のコード
+      firebase.auth().signInWithRedirect(google_auth_provider)
+    },
+    logout(){
+      firebase.auth().signOut()
+    },
+    deleteLoginUser({commit}){
+      commit('deleteLoginUser')
+    }
   },
   getters: {
     //coffeeListのidとparams.idが一致したものを返す

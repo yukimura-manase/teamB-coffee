@@ -19,14 +19,31 @@
 
 #nav {
   padding: 30px;
-
   a {
     font-weight: bold;
     color: #2c3e50;
-
     &.router-link-exact-active {
       color: #42b983;
     }
   }
 }
 </style>
+
+<script>
+import firebase from 'firebase'
+import { mapActions } from 'vuex'
+export default{
+created(){
+    firebase.auth().onAuthStateChanged(user =>{
+      if(user){
+        this.setLoginUser(user) //ログインユーザー情報をセット
+        }else{
+          this.deleteLoginUser() //ログインユーザー情報を削除
+        }
+    })
+  },
+  methods:{
+   ...mapActions(['setLoginUser','logout','deleteLoginUser'])
+  }
+}
+</script>
