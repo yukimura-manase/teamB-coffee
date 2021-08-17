@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// import firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -24,16 +25,37 @@ export default new Vuex.Store({
       {ID:16, name:'エスプレッソ', contents:'キャラメルのような甘く力強い味とナッツを感じさせる後味。スターバックスのすべてのエスプレッソ ビバレッジに使われているエスプレッソです。どうぞ、お早めにお召し上がりください。', priceM:310, priceL:350, imageURL:'16.jpg'},
       {ID:17, name:'ナッティホワイトモカ', contents:'ホワイトチョコレートとヘーゼルナッツに香り高いエスプレッソを加えた風味豊かなホワイト モカ。ホイップクリームをツリーに見立て、ナッツ&ホワイトチョコレートソースのリボンと、3色のチョコレート、シルバーのアラザンをイルミネーションのようにちりばめました。ホリデーシーズンにぴったりのあたたかな一杯で、特別なひと時をお楽しみください。', priceM:450, priceL:570, imageURL:'17.jpg'},
       {ID:18, name:'ジンジャーブレッドラテ', contents:'スターバックスのホリデーといえばやっぱりジンジャーブレッド ラテ、という人も多いのではないでしょうか。ジンジャーブレッドクッキーをイメージした、ほんのり甘くてスパイシーな風味は、この時期にしか味わえない特別なビバレッジです。体の中からじんわりとあたためてくれる一杯で、ほっとリラックスしたひと時をお過ごしください。', priceM:450, priceL:570, imageURL:'18.jpg'},
-  ],
+    ],
+    itemsIncart:[]
   
   },
   mutations: {
+    // //intoCartのactionsを画面に反映
+    // intoCart({ state }, itemdetails) {
+    //   state.itemsIncart.push(itemdetails)
+    // }
+
   },
   actions: {
-
+    // //選択したものをカート(DB)に入れる処理
+    // intoCart({ commit }, itemdetails) {
+    //   //カートが空だったら追加
+    //   if (this.itemsIncart === '' ) {
+    //     firebase.firestore().collection(`対象パス`).set({})
+    //       .then((doc) => {
+    //         commit("intoCart", { id: doc.id, itemdetails: itemdetails })
+    //       })
+    //   } else {
+    //     //カートに既に何か入っていたら
+    //     firebase.firestore().collection(`対象パス`).doc().update(itemdetails)
+    //       .then(() => {
+    //       commit("intoCart",{ id: doc.id, itemdetails: itemdetails } )
+    //     })
+    //   }
+    // }
   },
   getters: {
     //coffeeListのidとparams.idが一致したものを返す
-    getItem: (state) => (id) => state.coffeeList.find((item) => item.ID === id),
+    // getItem: (state) => (id) => state.coffeeList.find((item) => item.id === id),
     } 
 })
