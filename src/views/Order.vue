@@ -7,7 +7,7 @@
         【サイズ】
         <!-- v-model追加する -->
         <div>M: {{ itemdetails.priceM }}●●円(税抜)</div>
-         数量：
+        数量：
         <select>
                 <option>0</option>
                 <option>1</option>

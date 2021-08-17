@@ -43,8 +43,8 @@
         coffeelist:[],
         url:require('@/assets/img_coffee/header_logo.png'),
         search:''
-       }
-     },
+      }
+    },
       created(){
       console.log('画面表示します！');
       this.coffeelist = this.$store.state.coffeeList

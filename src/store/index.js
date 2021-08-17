@@ -30,7 +30,7 @@ export default new Vuex.Store({
   },
   mutations: {
     setLoginUser (state,user){
-      state.login_user = user 
+      state.login_user = user
     },
     deleteLoginUser(state,){
       state.login_user = null
