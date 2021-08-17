@@ -16,6 +16,7 @@
           <th>価格(M)</th>
           <th>価格(L)</th>
           <th>イメージ</th>
+          <th>商品詳細</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +27,7 @@
           <th>{{item.priceM}}円</th>
           <th>{{item.priceL}}円</th>
           <th><img :src="item.imageURL"></th>
+          <th><router-link :to="{name: 'Details',params:{id:item.ID}}"><button>商品詳細へ</button></router-link></th>
         </tr>
       </tbody>
     </table>
@@ -46,7 +48,6 @@
       }
     },
       created(){
-      console.log('画面表示します！');
       this.coffeelist = this.$store.state.coffeeList
       console.log(this.coffeelist);
     },
