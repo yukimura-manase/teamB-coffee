@@ -1,9 +1,7 @@
 <template>
   <div class="home">
-<<<<<<< HEAD
       <button @click="logout" v-if="$store.state.login_user">ログアウト</button>
       <button @click="login" v-else>ログイン</button>
-=======
     <img :src="url">
     <h1>コーヒーの商品検索</h1>
     <input type="text" v-model="search">
@@ -31,18 +29,15 @@
         </tr>
       </tbody>
     </table>
->>>>>>> de4819fe01f2f0b1f07d1b6040290c5b5fdd5519
   </div>
 </template>
+
 <script>
-<<<<<<< HEAD
   import { mapActions } from "vuex";
   export default{
     methods:{
       ...mapActions(["login","logout"]),
     },
-=======
-export default {
     data(){
       return {
         coffeelist:[],
@@ -56,6 +51,5 @@ export default {
       console.log(this.coffeelist);
     },
 
->>>>>>> de4819fe01f2f0b1f07d1b6040290c5b5fdd5519
   }
 </script>
