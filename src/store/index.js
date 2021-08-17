@@ -13,10 +13,15 @@ export default new Vuex.Store({
   },
   mutations: {
 <<<<<<< HEAD
+<<<<<<< HEAD
     setLoginUser (state,user){
 =======
     setLoginUser(state, user) {
 >>>>>>> 92ada9fa2e0fa9e4265ef310882489b88e5b5fa1
+=======
+
+    setLoginUser(state, user) {
+>>>>>>> display
       state.login_user = user
     },
     deleteLoginUser(state) {
@@ -73,8 +78,13 @@ export default new Vuex.Store({
     // }
   },
   getters: {
+<<<<<<< HEAD
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
     uid: (state) => (state.loginuser ? state.login_user.uid : null) 
+=======
+    // coffeeListのidとparams.idが一致したものを返す
+    getItem: (state) => (id) => state.coffeeList.find((item) => item.ID === id),
+>>>>>>> display
   }
 })      

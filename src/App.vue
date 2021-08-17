@@ -43,7 +43,7 @@ created(){
     })
   },
   methods:{
-   ...mapActions(['setLoginUser','logout','deleteLoginUser'])
+  ...mapActions(['setLoginUser','logout','deleteLoginUser'])
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div id="details">
         <div>商品詳細画面</div>
-
+        {{$route.params.id}}
         <div><img :src="itemdetails.imageURL"> </div>
         <div>{{itemdetails.name}}</div>
         <div>{{itemdetails.contents}}</div>
@@ -12,14 +12,15 @@
         数量：
 
 
+
         <div>M: {{ itemdetails.priceM }}円(税抜)</div>
+
         【トッピング】
         <!--v-forでチェックボックス作成
             <div>
             <v-for="">
             <input type="checkbox"></div> -->
         数量：<select v-model="countM">
-
                 <option>0</option>
                 <option>1</option>
                 <option>2</option>
@@ -47,7 +48,7 @@
                 <option>10</option>
             </select>
         <!--合計金額計算して表示itemdetails.priceMはダミー-->
-            <h1>商品金額：{{  totalPrice }}円(税込)</h1>
+            <h1>商品金額：{{ totalPrice }}円(税込)</h1>
 
         <!--ボタンclickしたら、firestoreに保存される-->
         <button click="intocCart">カートに入れる</button>
@@ -78,7 +79,6 @@ export default {
         if(getItem){
             this.itemdetails = getItem
         }
-
     },
     methods:{
         //カートのボタン押されたらintoActionsを呼び出し
@@ -92,7 +92,6 @@ export default {
             const total = (this.itemdetails.priceM * this.countM + this.itemdetails.priceL * this.countL) * 1.1
             return Math.floor(total)
         },
-       
     }
 }
 
