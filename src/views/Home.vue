@@ -26,6 +26,7 @@
           <th>{{item.priceM}}円</th>
           <th>{{item.priceL}}円</th>
           <th><img :src="item.imageURL"></th>
+          <th><router-link :to="{ name: 'Details', params:{ id: item.ID}}"><button>詳細</button></router-link></th>
         </tr>
       </tbody>
     </table>
@@ -36,19 +37,18 @@
   import { mapActions } from "vuex";
   export default{
     methods:{
-      ...mapActions(["login","logout"]),
+      ...mapActions(["login","logout","fetchItems"]),
     },
     data(){
       return {
-        coffeelist:[],
         url:require('@/assets/img_coffee/header_logo.png'),
         search:''
       }
     },
       created(){
-      console.log('画面表示します！');
-      this.coffeelist = this.$store.state.coffeeList
-      console.log(this.coffeelist);
+      // console.log('画面表示します！');
+      this.fetchItems()
+      console.log(this.$store.state.coffeelist);
     },
     computed:{
       getlist(){
