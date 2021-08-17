@@ -2,10 +2,13 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/details">商品詳細</router-link>
+      <router-link to="/details">商品詳細</router-link> |
+      <router-link to="/cart">買い物かご</router-link>
+
     </div>
     <router-view/>
   </div>
+
 </template>
 
 <script>
