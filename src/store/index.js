@@ -24,9 +24,20 @@ export default new Vuex.Store({
     },
     getTopping(state, { subItems }) {
       state.toppings.push(subItems)
-      console.log(state.toppings)
+      // console.log(state.toppings)
+    },
+    //idはカートのidを識別するためのもの
+    // confirmOrder(state, { id, cart }) {
+    //   cart.id = id
+    //   state.itemsIncart = cart
+    //   console.log(cart.id)
+    //   console.log(state.itemsIncart)
+    // },
+    intoCart(state, itemdetails) {
+      state.itemsIncart.push(itemdetails)
+      console.log('intoCart完了！');
+      console.log(state.itemsIncart);
     }
-
   },
   actions: {
     setLoginUser({ commit }, user) {
@@ -62,19 +73,21 @@ export default new Vuex.Store({
           commit('getTopping', { subItems: doc.data()}))
       })
     },
-    // confirmOrder({commit, getters}) {
-    //   if (getters.uid) {
-    //     firebase.firestore().collection(`/DBcart`).get()
-    //       .then(snapshot => {
-    //         snapshot.forEach(cart =>
-    //           commit('confirmOrder', { cart : cart.data() }))
-    //     })
-      // }
-    // }
+    //注文確認画面にカートの中身を表示
+    // confirmOrder({ commit }) {
+    //   this.state.itemsIncart = []
+    //   firebase.firestore().collection('/cartsample').get()
+    //     .then(snapshot => {
+    //       snapshot.forEach(doc =>
+    //         commit('confirmOrder', { id: doc.id, cart: doc.data() }))
+    //   })
+    // },
+
   },
   getters: {
     // coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((item) => item.ID === id),
     uid: (state) => (state.loginuser ? state.login_user.uid : null),
+    cartList: (state) => state.itemsIncart
   }
 })      

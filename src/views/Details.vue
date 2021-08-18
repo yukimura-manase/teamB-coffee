@@ -44,7 +44,7 @@
         <h1>商品金額：{{  totalPrice }}円(税込)</h1>
         <router-link :to="{name: 'Home'}"><button>戻る</button></router-link> |
         <!--ボタンclickしたら、firestoreに保存される-->
-        <button click="intocCart">カートに入れる</button>
+        <button @click="goCart(itemdetails)">カートに入れる</button>
     </div>
 </template>
 <script>
@@ -72,8 +72,13 @@ export default {
     },
     methods:{
         //カートのボタン押されたらintoActionsを呼び出し
-        intoCart(itemdetails){
-            this.intoCart(itemdetails)
+        goCart(itemdetails){
+            itemdetails.choseToppings = this.choseToppings
+            itemdetails.totalPrice = this.totalPrice;
+            itemdetails.countM = this.countM;
+            itemdetails.countL = this.countL;
+            // this.intoCart(itemdetails)
+            console.log(itemdetails)
         },
         ...mapActions(['intoCart', 'getTopping'])
     },
