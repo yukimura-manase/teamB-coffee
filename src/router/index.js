@@ -22,7 +22,7 @@ const routes = [
   {
     path: '/confirm',
     component: Confirm
-  }
+  },
 ]
 
 const router = new VueRouter({
