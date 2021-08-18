@@ -3,6 +3,7 @@
       <!-- <button @click="logout" v-if="$store.state.login_user">ログアウト</button>
       <button @click="login" v-else>ログイン</button>
     <img :src="url"> -->
+
     <h1>コーヒーの商品検索</h1>
     <input type="text" v-model="search">
     <button>検索</button>
@@ -43,6 +44,7 @@
     data(){
       return {
         // url:'img_coffee/header_logo.png',
+        // url:require('@/assets/img_coffee/header_logo.png'),
         search:''
       }
     },

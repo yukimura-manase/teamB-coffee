@@ -44,10 +44,7 @@
         <h1>商品金額：{{  totalPrice }}円(税込)</h1>
         <router-link :to="{name: 'Home'}"><button>戻る</button></router-link> |
         <!--ボタンclickしたら、firestoreに保存される-->
-        <button @click="goCart()">カートに入れる</button>
-
-        <!-- <button click="intocCart">カートに入れる</button> -->
-
+        <button @click="goCart(itemdetails)">カートに入れる</button>
     </div>
 </template>
 <script>
