@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import To_order from '../views/To_order'
 import Confirm from '../views/confirm.vue'
 
 Vue.use(VueRouter)
@@ -23,6 +24,11 @@ const routes = [
     path: '/confirm',
     component: Confirm
   },
+  {
+    path:'/toorder',
+    name:'Toorder',
+    component: To_order
+  }
 ]
 
 const router = new VueRouter({
