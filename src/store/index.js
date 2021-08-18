@@ -15,9 +15,12 @@ export default new Vuex.Store({
     
     itemsIncart:[],
 
-    
 
-    cartItem:[],
+    // 複数のカート情報が入る配列 => 商品情報が複数入る！
+    cartList:[],
+
+    // 1つのカートアイテム情報
+    //cartItem:{},
       
     
     toppings: []
@@ -44,33 +47,39 @@ export default new Vuex.Store({
     },
 
     //intoCartのactionsを画面に反映
-    intoCart(state, itemdetails) {
-      state.itemsIncart.push(itemdetails)
-      console.log('intoCart完了！');
-      console.log(state.itemsIncart);
-    },
+    // intoCart(state, itemdetails) {
+    //   state.itemsIncart.push(itemdetails)
+    //   console.log('intoCart完了！');
+    //   console.log(state.itemsIncart);
+    // },
 
-    cartSample(state,{id,sample}){
+    // cartSample(state,{id,sample}){
 
-      state.sampleList.id = id;
-      state.sampleList.push(sample)
-      console.log('cartSample完了！');
-      console.log(state.sampleList);
-    },
+    //   state.sampleList.id = id;
+    //   state.sampleList.push(sample)
+    //   console.log('cartSample完了！');
+    //   console.log(state.sampleList);
+    // },
 
     addCartItem(state,{id,cartItem}){
 
-      state.cartItem.id = id;
+      state.cartList.id = id;
       console.log(cartItem);
-      state.cartItem.push(cartItem);
+      state.cartList.push(cartItem);
       console.log('addCartItem完了！');
-      console.log(state.cartItem);
+      console.log(state.cartList);
 
     },
 
     getTopping(state, { subItems }) {
       state.toppings.push(subItems)
       console.log(state.toppings)
+    },
+
+    detailChangeCart(state,newCartItem){
+      state.cartList.push(newCartItem)
+      console.log('detailChangeCart完了！');
+      console.log(state.cartList);
     },
 
   },
@@ -185,6 +194,31 @@ export default new Vuex.Store({
 
     },
 
+    // 詳細画面からのカートに追加！！
+    detailChangeCart({getters,commit},changeItems){
+      if(getters.uid){
+        let newCartItem = getters.cartItemList;
+        newCartItem.cartItemList.push(changeItems);
+
+        firebase.firestore.collection(`users/${getters.uid}/carts`)
+        .get()
+        .then(snapshot=>{
+
+          snapshot.forEach(doc=>{
+
+            // DBから戻ってきたデータのstatusが0のものだけ、updateする！！
+            if(doc.data().status === 0){
+              firebase.firestore.collection(`users/${getters.uid}/carts`)
+              .update(newCartItem)
+              .then(()=>{
+                commit('detailChangeCart',newCartItem)
+              })
+            }
+          })
+        })
+      }
+    },
+
     setCart({getters,commit}){
       firebase.firestore().collection(`users/${getters.uid}/carts`)
       .add({
@@ -196,6 +230,7 @@ export default new Vuex.Store({
         orderDate:'',
         phoneNumber:'',
         status:0,
+        cartItemList:[]
       }).then(doc => {
         commit('addCartItem',{id: doc.id, cartItem: {}})
       })
@@ -236,7 +271,8 @@ export default new Vuex.Store({
   getters: {
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
-    uid: (state) => (state.login_user ? state.login_user.uid : null) 
+    uid: (state) => (state.login_user ? state.login_user.uid : null) ,
+    cartItemList:(state)=>{return state.cartList}
   
   },
     

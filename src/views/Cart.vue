@@ -1,24 +1,28 @@
 <template>
     <div>
 
-        <!-- v-if="this.cartContent.length === 0" -->
-        <div>
+        
+        <div v-if="this.cartContent.length === 0">
             <h1>カートに商品がありません!!</h1>
         </div>
 
-        <!-- v-if="this.cartContent.length >= 1" -->
-        <div>
+        
+        <div v-if="this.cartContent.length >= 1">
 
-            <!-- <h2 v-if="$store.state.login_user">{{$store.state.login_user.displayName}}さん専用のカート！！</h2> -->
+            <h2 v-if="$store.state.login_user">{{$store.state.login_user.displayName}}さん専用のカート！！</h2>
 
-            <!-- v-if="$store.state.login_user" -->
-            <div>
+            
+            <div v-if="$store.state.login_user">
 
                 <table border="1">
-                    <tr v-for="cart in cartContent" :key="cart.ID">
+                    <tr v-for="cart in cartContent" :key="cart.id">
                         <td>
 
+                            <div>郵便番号：{{cart.addressNumber}}</div>
+
                             <h2>住所：{{cart.address}}</h2>
+
+                            
 
                             <div><img :src="cart.imageURL"></div>
 
@@ -78,12 +82,20 @@ export default {
 
     created(){
 
-                this.cartContent = this.$store.state.sampleList;
+                
+                
+                this.cartContent = this.$store.state.cartList;
 
                 console.log('cartContentにセット完了！');
                 console.log(this.cartContent);
 
-                console.log(this.tax(100));
+                //console.log(this.tax(100));
+
+                // statusが0のものがあったらセットする！
+                // if(this.$store.state.cartItem.status === 0){
+
+                // }
+                
 
                 
 
@@ -92,7 +104,7 @@ export default {
     },
 
     methods:{
-        ...mapActions(['BuyInCart','DeleteInCart','cartSample']),
+        ...mapActions(['BuyInCart','DeleteInCart']),
 
         Buy(){
             console.log('購入ボタンが押されました！');
@@ -134,7 +146,7 @@ export default {
 
 }
 
-// Items[ item1: { ID:1,  ・・・}  ]
+
 
  
 
