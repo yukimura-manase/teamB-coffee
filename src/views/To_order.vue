@@ -59,7 +59,7 @@
 // import {mapActions} from 'vuex'
 export default {
   name:'Toorder',
- data(){
+  data(){
    return {
     name:null,
     email:null,

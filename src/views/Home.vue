@@ -10,22 +10,24 @@
     <table border="1">
       <thead>
         <tr>
-          <th>ID</th>
+          <!-- <th>ID</th> -->
           <th>商品名</th>
           <th>商品説明</th>
           <th>価格(M)</th>
           <th>価格(L)</th>
           <th>イメージ</th>
+          <th>商品詳細</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in getlist " :key="item.id">
-          <th>{{item.ID}}</th>
+          <!-- <th>{{item.ID}}</th> -->
           <th>{{item.name}}</th>
           <th>{{item.contents}}</th>
           <th>{{item.priceM}}円</th>
           <th>{{item.priceL}}円</th>
           <th><img :src="item.imageURL"></th>
+          <th><router-link :to="{name: 'Details',params:{id:item.ID}}"><button>商品詳細へ</button></router-link></th>
         </tr>
       </tbody>
     </table>
@@ -36,19 +38,16 @@
   import { mapActions } from "vuex";
   export default{
     methods:{
-      ...mapActions(["login","logout"]),
+      ...mapActions(["login","logout","fetchItems"]),
     },
     data(){
       return {
-        coffeelist:[],
         url:require('@/assets/img_coffee/header_logo.png'),
         search:''
-       }
-     },
+      }
+    },
       created(){
-      console.log('画面表示します！');
-      this.coffeelist = this.$store.state.coffeeList
-      console.log(this.coffeelist);
+          this.fetchItems()
     },
     computed:{
       getlist(){

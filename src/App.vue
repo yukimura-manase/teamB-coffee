@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/order">Order</router-link>
+      <router-link to="/">Home</router-link>
+      <router-link to="/confirm">confirm</router-link>
     </div>
     <router-view/>
   </div>
@@ -43,7 +43,7 @@ created(){
     })
   },
   methods:{
-   ...mapActions(['setLoginUser','logout','deleteLoginUser'])
+  ...mapActions(['setLoginUser','logout','deleteLoginUser'])
   }
 }
 </script>

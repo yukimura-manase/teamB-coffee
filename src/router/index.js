@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import To_order from '../views/To_order'
+import Confirm from '../views/confirm.vue'
 
 Vue.use(VueRouter)
 
@@ -12,12 +13,16 @@ const routes = [
     component: Home
   },
   {
-    path: '/order',
-    name: 'Order',
+    path: '/details/:id',
+    name: 'Details',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Order.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Details.vue')
+  },
+  {
+    path: '/confirm',
+    component: Confirm
   },
   {
     path:'/toorder',
