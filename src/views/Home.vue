@@ -41,12 +41,12 @@
     },
     data(){
       return {
-        url:require('@/assets/img_coffee/header_logo.png'),
+        url:'img_coffee/header_logo.png',
         search:''
        }
      },
       created(){
-      // console.log('画面表示します！');
+       console.log('画面表示します！');
       this.fetchItems()
       console.log(this.$store.state.coffeelist);
     },

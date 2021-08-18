@@ -7,40 +7,71 @@ Vue.use(Vuex)
 
 
 export default new Vuex.Store({
+
   state: {
     coffeeList: [],
     login_user: null,
 
-    //カート用の箱 // 確認用にデータを投入中！！
-    itemsIncart:[
-      { ID: 1, name: 'Gorgeous4サンド', contents: '人気の定番具材「ハム」と「チキン」をセットにした食べごたえ抜群のサンドイッチです', priceM: 480, priceL: 700, imageURL: require('@/assets/img_coffee/1.jpg') },
-      { ID: 2, name: 'エスプレッソフラペチーノ', contents: 'ひと口目に感じるエスプレッソは「リストレット」という方法で抽出した力強い香りと優しい苦味を、ふた口目は全体を混ぜて、こだわりのクリームから来るアフォガートのような味わいをお楽しみください。リフレッシュしたい時や、ほっとひと息つきたい時にも、何度でも飲みたくなるフラペチーノ®です。', priceM: 530, priceL: 650, imageURL: require('@/assets/img_coffee/2.jpg') },
-      { ID: 3, name: 'Specialキャラメルドーナッツ', contents: 'ドーナツ生地の中に、なめらかで風味豊かなキャラメルフィリングを入れ、仕上げにキャラメルのビター感と香ばしさが楽しめるキャラメルコーティングをかけました。', priceM: 250, priceL: 500, imageURL: require('@/assets/img_coffee/3.jpg') },
-      { ID: 4, name: 'チョコクッキー', contents: 'ソフトな食感のクッキー生地には、小麦の香ばしさが感じられるよう全粒粉を入れ、砂糖の一部にはブラウンシュガーを使い、コクのある甘さをプラスしています。風味豊かなスターバックスオリジナルのチョコレートチャンクがごろごろ入っていて、どこを食べてもチョコレートの味わいを存分に楽しめます。ショートサイズのマグカップの上に乗せられるくらいのサイズは、コーヒーと一緒に楽しむのにもぴったりです。', priceM: 190, priceL: 300, imageURL: require('@/assets/img_coffee/4.jpg') },
-      { ID: 5, name: 'カフェモカ', contents: 'エスプレッソにほろ苦いチョコレートシロップとミルクを加え、ホットビバレッジにはホイップクリームをトッピング。ちょっとした贅沢を楽しみたい方におすすめです。', priceM: 400, priceL: 520, imageURL: require('@/assets/img_coffee/5.jpg') },
-    ],
+    
+    itemsIncart:[],
+
+    
+
+    cartItem:[],
       
   },
+
   mutations: {
     setLoginUser(state,user) {
+
+      console.log("回覧されてきたのは・・・")
+      console.log(user)
+
       state.login_user = user
     },
     deleteLoginUser(state) {
       state.login_user = null
     },
     fetchItems(state, { item }) {
+      
       state.coffeeList.push(item)
       console.log(state.coffeeList)
-    }
-    // //intoCartのactionsを画面に反映
-    // intoCart({ state }, itemdetails) {
-    //   state.itemsIncart.push(itemdetails)
-    // }
+    },
+
+    //intoCartのactionsを画面に反映
+    intoCart(state, itemdetails) {
+      state.itemsIncart.push(itemdetails)
+      console.log('intoCart完了！');
+      console.log(state.itemsIncart);
+    },
+
+    cartSample(state,{id,sample}){
+
+      state.sampleList.id = id;
+      state.sampleList.push(sample)
+      console.log('cartSample完了！');
+      console.log(state.sampleList);
+    },
+    addCartItem(state,{id,cartItem}){
+
+      state.cartItem.id = id;
+      console.log(cartItem);
+      state.cartItem.push(cartItem);
+      console.log('addCartItem完了！');
+      console.log(state.cartItem);
+
+    },
 
   },
+
+
+
   actions: {
     setLoginUser({ commit }, user) {
-      commit('setLoginUser', user)
+        console.log('setLoginUser動いているよ！！'),
+        commit('setLoginUser', user)
+      
+      
     },
     login() {
       //Googleプロジェクトオブジェクトのインスタンスの作成
@@ -54,33 +85,129 @@ export default new Vuex.Store({
     deleteLoginUser({ commit }) {
       commit('deleteLoginUser')
     },
+
     fetchItems({ commit }) {
+
+      this.state.coffeeList = [] // 初期化
       firebase.firestore().collection(`/Items`)
         .get().then(snapshot => {
           snapshot.forEach(doc =>
             commit('fetchItems', {item: doc.data()}))
       })
-    }
-    // //選択したものをカート(DB)に入れる処理
-    // intoCart({ commit }, itemdetails) {
-    //   //カートが空だったら追加
-    //   if (this.itemsIncart === '' ) {
-    //     firebase.firestore().collection(`対象パス`).set({})
-    //       .then((doc) => {
-    //         commit("intoCart", { id: doc.id, itemdetails: itemdetails })
-    //       })
-    //   } else {
-    //     //カートに既に何か入っていたら
-    //     firebase.firestore().collection(`対象パス`).doc().update(itemdetails)
-    //       .then(() => {
-    //       commit("intoCart",{ id: doc.id, itemdetails: itemdetails } )
-    //     })
-    //   }
-    // }
+    },  
+
+    //選択したものをカート(DB)に入れる処理
+    intoCart({commit}, itemdetails) {
+
+      console.log('動いているか？');
+      //カートが空だったら追加
+      if (this.itemsIncart === '' ) {
+        console.log('動いているか？?');
+        firebase.firestore().collection('DBcart').doc()
+        .add({
+          
+        })
+         console.log('処理確認')
+          .then((doc) => {
+
+            console.log('firebaseからの返信')
+            console.log(doc)
+
+            commit("intoCart", { id: doc.id, itemdetails: itemdetails })
+          })
+      } else {
+        //カートに既に何か入っていたら
+
+        console.log('動いているか？？？');
+
+        firebase.firestore().collection('DBcart').doc('cart')
+          .update(itemdetails)
+          .then((doc) => {
+
+            console.log('動いているか？？？?');
+          commit("intoCart",{ id: doc.id, itemdetails: itemdetails } )
+        })
+      }
+    },
+
+    // 
+    addCartItem({getters,commit},cartItem){
+      if(getters.uid){
+        firebase.firestore().collection(`users/${getters.uid}/carts`)
+        .add(cartItem).then(doc => {
+          console.log('addCartItem起動！');
+          commit('addCartItem',{id: doc.id,cartItem})
+        })
+      }
+    },
+
+    // ログインユーザー固有のカート情報を取ってくる！！
+    fecthCartItem({getters,commit}){
+      firebase.firestore().collection(`users/${getters.uid}/carts`)
+      .get().then(snapshot => {
+
+        console.log('ログインユーザー固有のカート情報を取ってくる！！');
+        console.log("データの確認");
+        console.log(snapshot);
+
+        if(snapshot.empty){ // ログインユーザーに固有のカート情報がなければ、セットカート！
+          console.log('snapshotがemptyである！！')
+          this.dispatch('setCart')
+        }
+
+        snapshot.forEach(doc => {
+          console.log('fecthCartItemのforEach');
+          console.log(doc);
+
+          if(doc.data().status === 0){
+            commit('addCartItem',{id: doc.id, cartItem: doc.data()})
+          } 
+        })
+
+      })
+
+    },
+
+    setCart({getters,commit}){
+      firebase.firestore().collection(`users/${getters.uid}/carts`)
+      .add({
+        orderID:'',
+        user:'',
+        address:'',
+        addressNumber:'',
+        mail:'',
+        orderDate:'',
+        phoneNumber:'',
+        status:0,
+      }).then(doc => {
+        commit('addCartItem',{id: doc.id, cartItem: {}})
+      })
+    },
+
+
+    cartSample({commit}){ 
+      
+      firebase.firestore().collection('cartsample').get()
+      
+      .then(snapshot => {
+
+            console.log("データの確認")
+            console.log(snapshot);
+
+            snapshot.forEach(doc => {
+              console.log(doc);
+              commit('cartSample',{id: doc.id, sample: doc.data()})
+
+            })
+
+          })
+    
+    },
+
   },
   getters: {
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
-    uid: (state) => (state.loginuser ? state.login_user.uid : null) 
+    uid: (state) => (state.login_user ? state.login_user.uid : null) 
   }
 })      

@@ -1,11 +1,13 @@
 <template>
     <div>
 
-        <div v-if="this.cartContent.length === 0">
+        <!-- v-if="this.cartContent.length === 0" -->
+        <div>
             <h1>カートに商品がありません!!</h1>
         </div>
 
-        <div v-if="this.cartContent.length >= 1">
+        <!-- v-if="this.cartContent.length >= 1" -->
+        <div>
 
             <!-- <h2 v-if="$store.state.login_user">{{$store.state.login_user.displayName}}さん専用のカート！！</h2> -->
 
@@ -16,7 +18,7 @@
                     <tr v-for="cart in cartContent" :key="cart.ID">
                         <td>
 
-                            <h2>商品名：{{cart.name}}</h2>
+                            <h2>住所：{{cart.address}}</h2>
 
                             <div><img :src="cart.imageURL"></div>
 
@@ -44,7 +46,7 @@
                             <h2>ご注文金額合計：{{}}</h2>
 
                             <div>
-                                <button @click="AllBuy(cart)" style="width:300px">すべて購入する！</button>
+                                <button @click="Buy()" style="width:300px">すべて購入する！</button>
                             </div>
 
                         </td>
@@ -69,43 +71,44 @@ export default {
         return{
             cartContent:[],
 
+
             //{ ID: 1, name: 'Gorgeous4サンド', contents: '人気の定番具材「ハム」と「チキン」をセットにした食べごたえ抜群のサンドイッチです', priceM: 480, priceL: 700, imageURL: require('@/assets/img_coffee/1.jpg') },
         }
     },
 
     created(){
 
-                this.cartContent = this.$store.state.itemsIncart;
+                this.cartContent = this.$store.state.sampleList;
 
                 console.log('cartContentにセット完了！');
                 console.log(this.cartContent);
 
                 console.log(this.tax(100));
+
+                
+
             
-
-            // this.cartContent.forEach(ailias => {
-
-            //     let PriceResult = ailias.priceM * ailias.buyNum; 
-
-            //     ailias.priceResult = PriceResult; // 配列に価格 * 個数の計算結果を追加する！
-
-            // });
         
     },
 
     methods:{
-        ...mapActions(['BuyInCart','DeleteInCart']),
+        ...mapActions(['BuyInCart','DeleteInCart','cartSample']),
 
-        Buy(cart){
-
+        Buy(){
             console.log('購入ボタンが押されました！');
-            console.log(cart);
-
-            this.BuyInCart(cart);
-
-            this.$router.push('/thanks');
-
+            this.cartSample();
         },
+
+        // Buy(cart){
+
+        //     console.log('購入ボタンが押されました！');
+        //     console.log(cart);
+
+        //     this.BuyInCart(cart);
+
+        //     this.$router.push('/thanks');
+
+        // },
 
         deleteCart(cart){
 
@@ -123,10 +126,23 @@ export default {
         },
     },
 
+   
+
+
     
 
 
 }
+
+// Items[ item1: { ID:1,  ・・・}  ]
+
+ 
+
+
+
+
+ 
+
     
 
 // ショッピングカートの中身を表示する！
@@ -164,8 +180,7 @@ export default {
 // 【代替フロー】
 //  特になし
 // 【事後条件】
-//  ショッピングカートに商品情報が追加され、
-//  ショッピングカート画面が表示される
+//  ショッピングカートに商品情報が追加され、ショッピングカート画面が表示される
 
 // ショッピングカートにから商品を削除する！
 // 【ユースケース】

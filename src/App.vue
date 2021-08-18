@@ -51,16 +51,19 @@ import firebase from 'firebase'
 import { mapActions } from 'vuex'
 export default{
 created(){
-    firebase.auth().onAuthStateChanged(user =>{
+
+    firebase.auth().onAuthStateChanged(user =>{ //リダイレクト後
       if(user){
         this.setLoginUser(user) //ログインユーザー情報をセット
+
+        this.fecthCartItem() // ログインユーザーのcartItemを追加する！
         }else{
           this.deleteLoginUser() //ログインユーザー情報を削除
         }
     })
   },
   methods:{
-   ...mapActions(['setLoginUser','logout','deleteLoginUser'])
+   ...mapActions(['setLoginUser','logout','deleteLoginUser','fecthCartItem'])
   }
 }
 </script>
