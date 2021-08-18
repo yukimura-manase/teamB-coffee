@@ -72,9 +72,19 @@ export default new Vuex.Store({
       state.toppings.push(subItems)
       console.log(state.toppings)
     },
-
+    //idはカートのidを識別するためのもの
+    // confirmOrder(state, { id, cart }) {
+    //   cart.id = id
+    //   state.itemsIncart = cart
+    //   console.log(cart.id)
+    //   console.log(state.itemsIncart)
+    // },
+    intoCart(state, itemdetails) {
+      state.itemsIncart.push(itemdetails)
+      console.log('intoCart完了！');
+      console.log(state.itemsIncart);
+    }
   },
-
   actions: {
 
     setLoginUser({ commit }, user) {
@@ -230,13 +240,13 @@ export default new Vuex.Store({
           commit('getTopping', { subItems: doc.data()}))
       })
     },
-
   },
 
   getters: {
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
-    uid: (state) => (state.login_user ? state.login_user.uid : null) 
+    uid: (state) => (state.login_user ? state.login_user.uid : null),
+    cartList: (state) => state.itemsIncart
   
   },
     
@@ -250,4 +260,13 @@ export default new Vuex.Store({
       // }
     // }
   
-})      
+})     
+    //注文確認画面にカートの中身を表示
+    // confirmOrder({ commit }) {
+    //   this.state.itemsIncart = []
+    //   firebase.firestore().collection('/cartsample').get()
+    //     .then(snapshot => {
+    //       snapshot.forEach(doc =>
+    //         commit('confirmOrder', { id: doc.id, cart: doc.data() }))
+    //   })
+    // },
