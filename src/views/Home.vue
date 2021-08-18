@@ -10,7 +10,7 @@
     <table border="1">
       <thead>
         <tr>
-          <th>ID</th>
+          <!-- <th>ID</th> -->
           <th>商品名</th>
           <th>商品説明</th>
           <th>価格(M)</th>
@@ -21,7 +21,7 @@
       </thead>
       <tbody>
         <tr v-for="item in getlist " :key="item.id">
-          <th>{{item.ID}}</th>
+          <!-- <th>{{item.ID}}</th> -->
           <th>{{item.name}}</th>
           <th>{{item.contents}}</th>
           <th>{{item.priceM}}円</th>
@@ -47,9 +47,7 @@
       }
     },
       created(){
-      // console.log('画面表示します！');
-      this.fetchItems()
-      console.log(this.$store.state.coffeelist);
+          this.fetchItems()
     },
     computed:{
       getlist(){

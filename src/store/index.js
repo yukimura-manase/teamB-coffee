@@ -9,19 +9,11 @@ export default new Vuex.Store({
     coffeeList: [],
     login_user: null,
     //カート用の箱
-    itemsIncart: []
+    itemsIncart: [],
+    toppings: []
   },
   mutations: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    setLoginUser (state,user){
-=======
     setLoginUser(state, user) {
->>>>>>> 92ada9fa2e0fa9e4265ef310882489b88e5b5fa1
-=======
-
-    setLoginUser(state, user) {
->>>>>>> display
       state.login_user = user
     },
     deleteLoginUser(state) {
@@ -29,12 +21,11 @@ export default new Vuex.Store({
     },
     fetchItems(state, { item }) {
       state.coffeeList.push(item)
-      console.log(state.coffeeList)
+    },
+    getTopping(state, { subItems }) {
+      state.toppings.push(subItems)
+      console.log(state.toppings)
     }
-    // //intoCartのactionsを画面に反映
-    // intoCart({ state }, itemdetails) {
-    //   state.itemsIncart.push(itemdetails)
-    // }
 
   },
   actions: {
@@ -53,38 +44,37 @@ export default new Vuex.Store({
     deleteLoginUser({ commit }) {
       commit('deleteLoginUser')
     },
+    //商品リストをfirestoreから持ってくる
     fetchItems({ commit }) {
+      this.state.coffeeList = []
       firebase.firestore().collection(`/Items`)
         .get().then(snapshot => {
           snapshot.forEach(doc =>
-            commit('fetchItems', {item: doc.data()}))
+            commit('fetchItems', { item: doc.data()}))
       })
-    }
-    // //選択したものをカート(DB)に入れる処理
-    // intoCart({ commit }, itemdetails) {
-    //   //カートが空だったら追加
-    //   if (this.itemsIncart === '' ) {
-    //     firebase.firestore().collection(`対象パス`).set({})
-    //       .then((doc) => {
-    //         commit("intoCart", { id: doc.id, itemdetails: itemdetails })
-    //       })
-    //   } else {
-    //     //カートに既に何か入っていたら
-    //     firebase.firestore().collection(`対象パス`).doc().update(itemdetails)
-    //       .then(() => {
-    //       commit("intoCart",{ id: doc.id, itemdetails: itemdetails } )
+    },
+    //トッピングを持ってくる
+    getTopping({ commit }) {
+      this.state.toppings = []
+      firebase.firestore().collection(`/subItems`).get()
+        .then(snapshot => {
+          snapshot.forEach(doc =>
+          commit('getTopping', { subItems: doc.data()}))
+      })
+    },
+    // confirmOrder({commit, getters}) {
+    //   if (getters.uid) {
+    //     firebase.firestore().collection(`/DBcart`).get()
+    //       .then(snapshot => {
+    //         snapshot.forEach(cart =>
+    //           commit('confirmOrder', { cart : cart.data() }))
     //     })
-    //   }
+      // }
     // }
   },
   getters: {
-<<<<<<< HEAD
-    //coffeeListのidとparams.idが一致したものを返す
-    getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
-    uid: (state) => (state.loginuser ? state.login_user.uid : null) 
-=======
     // coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((item) => item.ID === id),
->>>>>>> display
+    uid: (state) => (state.loginuser ? state.login_user.uid : null),
   }
 })      
