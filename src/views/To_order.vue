@@ -1,0 +1,190 @@
+<template>
+
+  <form>
+    <p v-if="errors.length">
+    <ul>
+      <li v-for="error in errors" :key="error.error_id">{{ error }}</li>
+
+    </ul>
+    </p>
+    <p>お届け先情報</p>
+      <div>
+        お名前<input type="text" v-model="name">
+      </div>
+      <div>
+        メールアドレス<input type="text" v-model="email">
+      </div>
+      <div>
+        郵便番号<input type="text" v-model="zipaddress">
+      </div>
+      <div>
+        住所<input type="text" v-model="address">
+      </div>
+      <div>
+        電話番号<input type="text" v-model="phone">
+      </div>
+ 
+      <div>
+        配達日
+        <input type="date" v-model="orderdate">
+      </div>
+
+      <div>
+        時間
+      <select v-model="ordertime">
+        <option v-for="option in options" v-bind:value="option.value" :key="option.option_id">
+              {{ option.text }}
+        </option>
+      </select>
+      </div>
+        <div>
+          <h1>お支払い方法</h1>
+
+
+          <input type="radio" id="daibiki" value="1" v-model="status">
+            <label for="daibiki">代金引換</label>
+          <br>
+          <input type="radio" id="credit" value="2" v-model="status">
+          <label for="credit">クレジットカード</label>
+          <br>
+                    
+        </div>
+        <button type="submit" @click="checkForm">送信</button>
+
+  </form>
+        
+</template>
+<script>
+// import axios from 'axios'
+// import {mapActions} from 'vuex'
+export default {
+  name:'Toorder',
+  data(){
+   return {
+    name:null,
+    email:null,
+    zipaddress:null,
+    address:null,
+    phone:null,
+    orderdate:null,
+    ordertime:null,
+    errors:[],
+    status:null,
+    options: [
+        {text:'10時',value:10},
+        {text:'11時',value:11},
+        {text:'12時',value:12},
+        {text:'13時',value:13},
+        {text:'14時',value:14},
+        {text:'15時',value:15},
+        {text:'16時',value:16},
+        {text:'17時',value:17},
+        {text:'18時',value:18},
+      ],
+   }
+},
+
+methods: {
+    checkForm: function (e) {
+      this.errors = [];
+
+      if (!this.name) {
+        this.errors.push("名前を入力してください");
+      } //名前のバリデーション
+
+      if (!this.email) {
+        this.errors.push('メールアドレスを入力してください');
+      } else if (!this.validEmail(this.email)) {
+        this.errors.push('メールアドレスの形式が不正です');
+      } //メールアドレスのバリデーション
+
+      if (!this.zipaddress) {
+        this.errors.push("郵便番号を入力して下さい");
+      } else if(!this.validZipaddress(this.zipaddress)){
+       this.errors.push('郵便番号はXXX-XXXXの形式で入力してください');
+      } //郵便番号のバリデーション
+
+      if (!this.address) {
+        this.errors.push("住所を入力して下さい");
+      }  //住所のバリデーション
+
+      if (!this.phone) {
+        this.errors.push("電話番号を入力して下さい");
+      } else if(!this.validPhone(this.phone)){
+       this.errors.push('電話番号はXXXX-XXXX-XXXXの形式で入力してください');
+      } //電話番号のバリデーション
+
+      if (!this.orderdate) {
+        this.errors.push("配達日時を入力して下さい");
+      } else if(!this.validOrderdate(this.orderdate)){
+       this.errors.push('今から3時間後の日時をご入力ください');
+      } //配達日時のバリデーション
+
+      if (!this.ordertime) {
+        this.errors.push("配達日時を入力して下さい");
+      } //配達日時のバリデーション
+
+      if (!this.errors.length) {
+        return true;
+      }
+      e.preventDefault();
+    },
+
+    validEmail: function (email) {
+      let re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email); //メールアドレスの表記のバリデーション
+    },
+    validZipaddress: function(zipaddress){
+      let re = /^\d{3}-\d{4}$/
+      return re.test(zipaddress) //郵便番号の表記のバリデーション
+    },
+    validPhone: function(phone){
+      let re = /^\d{2,5}-\d{1,4}-\d{4}$/
+      return re.test(phone) //郵便番号の表記のバリデーション
+    },
+
+    validOrderdate: function(orderdate){
+      //本日
+      let today = new Date() 
+      today = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        today.getHours()
+      )
+      
+      let date1 = new Date(orderdate)
+
+      let nowDay = today.getDate()
+
+      let date = new Date (date1)
+       date1 = new Date(
+        date1.getMonth(),
+        date1.getDate()
+      )
+
+      let selectedDay = date.getDate()
+      let nowHour = today.getHours()
+      let a = Math.abs(this.ordertime - nowHour)
+
+      if(nowDay === selectedDay){
+        console.log('同じ日付です')
+        if( this.ordertime <= nowHour){
+           console.log('時間がおかしいです')
+          return false
+        } else if( 3 <= a)
+        console.log('時間は正常です')
+        return true
+      }//ここまで同じ日の場合の処理
+         else if(nowDay >= selectedDay){
+        console.log('本日以降の日付を選択してください')
+        return false
+      }else{
+        return true
+      }
+    },
+  }
+}
+</script>
+
+

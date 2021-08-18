@@ -19,9 +19,12 @@ export default new Vuex.Store({
 
     cartItem:[],
       
+    
+    toppings: []
   },
 
   mutations: {
+
     setLoginUser(state,user) {
 
       console.log("回覧されてきたのは・・・")
@@ -29,9 +32,11 @@ export default new Vuex.Store({
 
       state.login_user = user
     },
+
     deleteLoginUser(state) {
       state.login_user = null
     },
+
     fetchItems(state, { item }) {
       
       state.coffeeList.push(item)
@@ -52,6 +57,7 @@ export default new Vuex.Store({
       console.log('cartSample完了！');
       console.log(state.sampleList);
     },
+
     addCartItem(state,{id,cartItem}){
 
       state.cartItem.id = id;
@@ -62,26 +68,33 @@ export default new Vuex.Store({
 
     },
 
+    getTopping(state, { subItems }) {
+      state.toppings.push(subItems)
+      console.log(state.toppings)
+    },
+
   },
 
-
-
   actions: {
+
     setLoginUser({ commit }, user) {
         console.log('setLoginUser動いているよ！！'),
         commit('setLoginUser', user)
       
       
     },
+
     login() {
       //Googleプロジェクトオブジェクトのインスタンスの作成
       const google_auth_provider = new firebase.auth.GoogleAuthProvider()
       //ログインページ（google）のにリダイレクトしてログインする為のコード
       firebase.auth().signInWithRedirect(google_auth_provider)
     },
+
     logout() {
       firebase.auth().signOut()
     },
+
     deleteLoginUser({ commit }) {
       commit('deleteLoginUser')
     },
@@ -89,10 +102,12 @@ export default new Vuex.Store({
     fetchItems({ commit }) {
 
       this.state.coffeeList = [] // 初期化
+    //商品リストをfirestoreから持ってくる
+
       firebase.firestore().collection(`/Items`)
         .get().then(snapshot => {
           snapshot.forEach(doc =>
-            commit('fetchItems', {item: doc.data()}))
+            commit('fetchItems', { item: doc.data()}))
       })
     },  
 
@@ -100,6 +115,7 @@ export default new Vuex.Store({
     intoCart({commit}, itemdetails) {
 
       console.log('動いているか？');
+
       //カートが空だったら追加
       if (this.itemsIncart === '' ) {
         console.log('動いているか？?');
@@ -143,6 +159,7 @@ export default new Vuex.Store({
 
     // ログインユーザー固有のカート情報を取ってくる！！
     fecthCartItem({getters,commit}){
+
       firebase.firestore().collection(`users/${getters.uid}/carts`)
       .get().then(snapshot => {
 
@@ -204,10 +221,33 @@ export default new Vuex.Store({
     
     },
 
+    //トッピングを持ってくる
+    getTopping({ commit }) {
+      this.state.toppings = []
+      firebase.firestore().collection(`/subItems`).get()
+        .then(snapshot => {
+          snapshot.forEach(doc =>
+          commit('getTopping', { subItems: doc.data()}))
+      })
+    },
+
   },
+
   getters: {
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
     uid: (state) => (state.login_user ? state.login_user.uid : null) 
-  }
+  
+  },
+    
+    // confirmOrder({commit, getters}) {
+    //   if (getters.uid) {
+    //     firebase.firestore().collection(`/DBcart`).get()
+    //       .then(snapshot => {
+    //         snapshot.forEach(cart =>
+    //           commit('confirmOrder', { cart : cart.data() }))
+    //     })
+      // }
+    // }
+  
 })      

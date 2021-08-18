@@ -1,18 +1,18 @@
 <template>
     <div id="details">
         <div>商品詳細画面</div>
-
+        {{$route.params.id}}
         <div><img :src="itemdetails.imageURL"> </div>
         <div>{{itemdetails.name}}</div>
         <div>{{itemdetails.contents}}</div>
-        【サイズ】
-        <!-- v-model追加する -->
+        <div>【トッピング】</div>
+            <span v-for="tops in toppings" :key="tops.ID">
+            <label><input type="checkbox" v-model="choseToppings" :value="tops.name">
+            {{ tops.name }}</label></span> 
+            <div>※Mサイズは1トッピングにつき200円</div>
+            <div>Lサイズは1トッピングにつき300円</div>
+        <div>【サイズ】</div>
         <div>M: {{ itemdetails.priceM }}円(税抜)</div>
-        【トッピング】
-        <!--v-forでチェックボックス作成 
-            <div> 
-            <v-for="">
-            <input type="checkbox"></div> -->
         数量：<select v-model="countM">
                 <option disabled>0</option>
                 <option>1</option>
@@ -40,20 +40,18 @@
                 <option>9</option>
                 <option>10</option>
             </select>
-        <!--合計金額計算して表示itemdetails.priceMはダミー-->
-            <h1>商品金額：{{  totalPrice }}円(税込)</h1>
-
+        <div>選択中のトッピング：{{ choseToppings }}</div>
+        <h1>商品金額：{{  totalPrice }}円(税込)</h1>
+        <router-link :to="{name: 'Home'}"><button>戻る</button></router-link> |
         <!--ボタンclickしたら、firestoreに保存される-->
         <button @click="goCart()">カートに入れる</button>
+
+        <!-- <button click="intocCart">カートに入れる</button> -->
 
     </div>
 </template>
 <script>
-import {mapActions} from 'vuex'
-
-// 必要な処理
-//intocartメソッドを呼んだ後のactionsとmutationsの処理
-
+import {mapActions, mapState} from 'vuex'
 export default {
     name: 'Order',
     data(){
@@ -62,6 +60,8 @@ export default {
             itemdetails:{},
             countM:'0',
             countL:'0',
+            topping:{},
+            choseToppings:[]
         }
     },
     created(){
@@ -75,11 +75,11 @@ export default {
         if(getItem){
             this.itemdetails = getItem
         }
-
+        this.getTopping()
     },
     methods:{
 
-         ...mapActions(['addCartItem']),
+         ...mapActions(['addCartItem','intoCart', 'getTopping']),
 
 
         //カートのボタン押されたらaddCartItemを呼び出し
@@ -97,8 +97,6 @@ export default {
 
             this.addCartItem(itemdetails);
         },
-           
-       
     },
 
     computed:{
@@ -106,7 +104,7 @@ export default {
             const total = (this.itemdetails.priceM * this.countM + this.itemdetails.priceL * this.countL) * 1.1
             return Math.floor(total)
         },
-       
+        ...mapState(['toppings'])
     }
 }
 
