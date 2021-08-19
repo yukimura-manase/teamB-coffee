@@ -2,8 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/cart">買い物かご</router-link> |
-      <router-link to="/confirm">confirm</router-link>
+      <router-link to="/cart">買い物かご</router-link> 
     </div>
 
     <div><Header /></div>
@@ -55,6 +54,7 @@ created(){
         this.fecthCartItem() // ログインユーザーのcartItemを追加する！
         }else{
           this.deleteLoginUser() //ログインユーザー情報を削除
+          this.$router.push({name: 'Home'})
         }
     })
   },
