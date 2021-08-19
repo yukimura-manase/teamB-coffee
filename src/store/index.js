@@ -9,20 +9,15 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 
   state: {
+    //商品リスト
     coffeeList: [],
     login_user: null,
-
-    
-    itemsIncart:[],
-
-
     // 複数のカート情報が入る配列 => 商品情報が複数入る！
     cartList:[],
-
-    // 1つのカートアイテム情報
-    //cartItem:{},
-      
-    
+    itemsIncart: [],
+    //ショッピングカート表示の為の配列
+    cartItem: [],
+    //トッピングリスト
     toppings: []
   },
 
@@ -62,8 +57,8 @@ export default new Vuex.Store({
     // },
 
     addCartItem(state,{id,cartItem}){
-
-      state.cartList.id = id;
+      // state.cartList.id = id;
+      state.cartItem.id = id;
       console.log(cartItem);
       state.cartList.push(cartItem);
       console.log('addCartItem完了！');
@@ -89,7 +84,6 @@ export default new Vuex.Store({
     //   console.log(cart.id)
     //   console.log(state.itemsIncart)
     // },
-
     // intoCart(state, itemdetails) {
     //   state.itemsIncart.push(itemdetails)
     //   console.log('intoCart完了！');
@@ -99,12 +93,9 @@ export default new Vuex.Store({
 
   
   actions: {
-
     setLoginUser({ commit }, user) {
         console.log('setLoginUser動いているよ！！'),
-        commit('setLoginUser', user)
-      
-      
+        commit('setLoginUser', user)    
     },
 
     login() {
@@ -138,7 +129,6 @@ export default new Vuex.Store({
     intoCart({commit}, itemdetails) {
 
       console.log('動いているか？');
-
       //カートが空だったら追加
       if (this.itemsIncart === '' ) {
         console.log('動いているか？?');
@@ -156,9 +146,7 @@ export default new Vuex.Store({
           })
       } else {
         //カートに既に何か入っていたら
-
         console.log('動いているか？？？');
-
         firebase.firestore().collection('DBcart').doc('cart')
           .update(itemdetails)
           .then((doc) => {
@@ -168,9 +156,8 @@ export default new Vuex.Store({
         })
       }
     },
-
-    // 
-    addCartItem({getters,commit},cartItem){
+    addCartItem({ getters, commit }, cartItem) {
+      //ログインしていれば、
       if(getters.uid){
         firebase.firestore().collection(`users/${getters.uid}/carts`)
         .add(cartItem).then(doc => {
@@ -285,12 +272,13 @@ export default new Vuex.Store({
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
     uid: (state) => (state.login_user ? state.login_user.uid : null) ,
-    cartItemList:(state)=>{return state.cartList}
+    cartItemList: (state) => { return state.cartList },
+    cartList: (state) => state.cartItem
 
 
     // uid: (state) => (state.login_user ? state.login_user.uid : null),
     // cartList: (state) => state.itemsIncart
-  
+    
   },
     
     // confirmOrder({commit, getters}) {

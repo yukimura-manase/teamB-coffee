@@ -4,6 +4,7 @@
         <table v-if="cartItems.length">
             <thead>
             <tr>
+                <th>商品イメージ</th>
                 <th>商品名</th>
                 <th>サイズ</th>
                 <th>数量</th>
@@ -14,9 +15,9 @@
             </thead>
             <tbody v-for="(item, index) in cartItems" :key="index">
                 <tr v-for="(item2, index) in item" :key="index">
-                <td>{{item2.ID}}</td>
-                <td>{{item2.num}}</td>
-                <td>{{item2.size}}</td>
+                <td><img :src="item2.imageURL"></td>
+                <td>{{item2.name}}</td>
+                <td>Lサイズ：{{item2.countL}}個 Mサイズ：{{item2.countM}}個</td>
                 <td>{{item2.topping}}</td>
                 <td>{{item2.totalPrice}}</td>
                 <td><button @click="deleteConfirm(id)">削除</button></td>
@@ -55,8 +56,10 @@ export default{
         // }
     },
     created(){
+        //storeのカートリストをcartItemsにpush
         this.cartItems.push(this.cartList)
-        // console.log(this.itemsIncart)
+        console.log(this.cartItems)
+
     },
     computed:{
         // sumPrice(){
