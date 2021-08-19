@@ -9,29 +9,29 @@
     </p>
     <p>お届け先情報</p>
       <div>
-        お名前<input type="text" v-model="name">
+        お名前<input type="text" v-model="CustomerInfo.name">
       </div>
       <div>
-        メールアドレス<input type="text" v-model="email">
+        メールアドレス<input type="text" v-model="CustomerInfo.email">
       </div>
       <div>
-        郵便番号<input type="text" v-model="zipaddress">
+        郵便番号<input type="text" v-model="CustomerInfo.zipaddress">
       </div>
       <div>
-        住所<input type="text" v-model="address">
+        住所<input type="text" v-model="CustomerInfo.address">
       </div>
       <div>
-        電話番号<input type="text" v-model="phone">
+        電話番号<input type="text" v-model="CustomerInfo.phone">
       </div>
  
       <div>
         配達日
-        <input type="date" v-model="orderdate">
+        <input type="date" v-model="CustomerInfo.orderdate">
       </div>
 
       <div>
         時間
-      <select v-model="ordertime">
+      <select v-model="CustomerInfo.ordertime">
         <option v-for="option in options" v-bind:value="option.value" :key="option.option_id">
               {{ option.text }}
         </option>
@@ -41,26 +41,27 @@
           <h1>お支払い方法</h1>
 
 
-          <input type="radio" id="daibiki" value="1" v-model="status">
+          <input type="radio" id="daibiki" value="1" v-model="CustomerInfo.status">
             <label for="daibiki">代金引換</label>
           <br>
-          <input type="radio" id="credit" value="2" v-model="status">
+          <input type="radio" id="credit" value="2" v-model="CustomerInfo.status">
           <label for="credit">クレジットカード</label>
           <br>
                     
         </div>
-        <button type="submit" @click="checkForm">送信</button>
+        <button type="submit" @click="checkForm">注文する</button>
 
   </form>
         
 </template>
 <script>
 // import axios from 'axios'
-// import {mapActions} from 'vuex'
+import {mapActions} from 'vuex'
 export default {
   name:'Toorder',
   data(){
    return {
+    CustomerInfo:{
     name:null,
     email:null,
     zipaddress:null,
@@ -68,8 +69,11 @@ export default {
     phone:null,
     orderdate:null,
     ordertime:null,
-    errors:[],
     status:null,
+     }
+     ,
+      errors:[],
+
     options: [
         {text:'10時',value:10},
         {text:'11時',value:11},
@@ -88,46 +92,50 @@ methods: {
     checkForm: function (e) {
       this.errors = [];
 
-      if (!this.name) {
+      if (!this.CustomerInfo.name) {
         this.errors.push("名前を入力してください");
       } //名前のバリデーション
 
-      if (!this.email) {
+      if (!this.CustomerInfo.email) {
         this.errors.push('メールアドレスを入力してください');
-      } else if (!this.validEmail(this.email)) {
+      } else if (!this.validEmail(this.CustomerInfo.email)) {
         this.errors.push('メールアドレスの形式が不正です');
       } //メールアドレスのバリデーション
 
-      if (!this.zipaddress) {
+      if (!this.CustomerInfo.zipaddress) {
         this.errors.push("郵便番号を入力して下さい");
-      } else if(!this.validZipaddress(this.zipaddress)){
+      } else if(!this.validZipaddress(this.CustomerInfo.zipaddress)){
        this.errors.push('郵便番号はXXX-XXXXの形式で入力してください');
       } //郵便番号のバリデーション
 
-      if (!this.address) {
+      if (!this.CustomerInfo.address) {
         this.errors.push("住所を入力して下さい");
       }  //住所のバリデーション
 
-      if (!this.phone) {
+      if (!this.CustomerInfo.phone) {
         this.errors.push("電話番号を入力して下さい");
-      } else if(!this.validPhone(this.phone)){
+      } else if(!this.validPhone(this.CustomerInfo.phone)){
        this.errors.push('電話番号はXXXX-XXXX-XXXXの形式で入力してください');
       } //電話番号のバリデーション
 
-      if (!this.orderdate) {
+      if (!this.CustomerInfo.orderdate) {
         this.errors.push("配達日時を入力して下さい");
-      } else if(!this.validOrderdate(this.orderdate)){
+      } else if(!this.validOrderdate(this.CustomerInfo.orderdate)){
        this.errors.push('今から3時間後の日時をご入力ください');
       } //配達日時のバリデーション
 
-      if (!this.ordertime) {
+      if (!this.CustomerInfo.ordertime) {
         this.errors.push("配達日時を入力して下さい");
       } //配達日時のバリデーション
 
       if (!this.errors.length) {
+        this.addCustomerInfo(this.customerInfo);
+        this.$router.push({ name: "Done" });
         return true;
+        
       }
       e.preventDefault();
+         
     },
 
     validEmail: function (email) {
@@ -142,6 +150,7 @@ methods: {
       let re = /^\d{2,5}-\d{1,4}-\d{4}$/
       return re.test(phone) //郵便番号の表記のバリデーション
     },
+
 
     validOrderdate: function(orderdate){
       //本日
@@ -183,6 +192,7 @@ methods: {
         return true
       }
     },
+      ...mapActions(['addCustomerInfo'])
   }
 }
 </script>

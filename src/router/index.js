@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import Cart from '../views/Cart.vue'
 import To_order from '../views/To_order'
 import Confirm from '../views/confirm.vue'
+import Done from '../views/Done.vue'
+
 
 Vue.use(VueRouter)
 
@@ -35,7 +37,13 @@ const routes = [
     path:'/toorder',
     name:'Toorder',
     component: To_order
+  },
+  {
+    path:'/done',
+    name:'Done',
+    component: Done
   }
+
 ]
 
 const router = new VueRouter({

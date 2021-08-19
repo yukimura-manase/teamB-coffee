@@ -77,6 +77,11 @@ export default new Vuex.Store({
       console.log(state.cartList);
     },
 
+    addCustomerInfo(state, { id, CustomerInfo }) {
+      CustomerInfo.id = id;
+      state.orderList = CustomerInfo;
+    },
+
     //idはカートのidを識別するためのもの
     // confirmOrder(state, { id, cart }) {
     //   cart.id = id
@@ -194,6 +199,19 @@ export default new Vuex.Store({
       })
 
     },
+    //注文者情報を追加する
+    addCustomerInfo({ getters, commit }, CustomerInfo) {
+      if (getters.uid) {
+        firebase
+          .firestore()
+          .collection(`users/${getters.uid}/carts`)
+          .doc(getters.cartId)
+          .update(CustomerInfo)
+          .then(doc => {
+            commit("addCustomerInfo", { id: doc.id, CustomerInfo })
+          })
+      }
+    },
 
     // 詳細画面からのカートに追加！！
     detailChangeCart({getters,commit},changeItems){
@@ -225,11 +243,18 @@ export default new Vuex.Store({
       .add({
         orderID:'',
         user:'',
-        address:'',
-        addressNumber:'',
-        mail:'',
-        orderDate:'',
-        phoneNumber:'',
+        name:null,
+        email:null,
+        zipaddress:null,
+        address:null,
+        phone:null,
+        orderdate:null,
+        ordertime:null,
+         // address:'',
+        // addressNumber:'',
+        // mail:'',
+        // orderDate:'',
+        // phoneNumber:'',
         status:0,
         cartItemList:[]
       }).then(doc => {
@@ -273,9 +298,8 @@ export default new Vuex.Store({
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
     uid: (state) => (state.login_user ? state.login_user.uid : null) ,
     cartItemList: (state) => { return state.cartList },
-    cartList: (state) => state.cartItem
-
-
+    cartList: (state) => state.cartItem,
+    cartId: state => state.cartId,
     // uid: (state) => (state.login_user ? state.login_user.uid : null),
     // cartList: (state) => state.itemsIncart
     
