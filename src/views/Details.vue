@@ -1,7 +1,7 @@
 <template>
     <div id="details">
         <div>商品詳細画面</div>
-        {{$route.params.id}}
+        <!-- {{$route.params.id}} -->
         <div><img :src="itemdetails.imageURL"> </div>
         <div>{{itemdetails.name}}</div>
         <div>{{itemdetails.contents}}</div>
@@ -44,7 +44,7 @@
         <h1>商品金額：{{  totalPrice }}円(税込)</h1>
         <router-link :to="{name: 'Home'}"><button>戻る</button></router-link> |
         <!--ボタンclickしたら、firestoreに保存される-->
-        <button @click="goCart(itemdetails)">カートに入れる</button>
+        <router-link :to="{ name: 'Confirm' }"><button @click="goCart(itemdetails)">カートに入れる</button></router-link>
     </div>
 </template>
 <script>
@@ -65,26 +65,18 @@ export default {
         //this.$route.params.idは選択された商品のid
         //gettersによってstateの配列のなかからidが一致したデータを取得
         const getItem = this.$store.getters.getItem(this.$route.params.id);
-
-        console.log('商品詳細画面を生成！');
         console.log(getItem)
-
         if(getItem){
             this.itemdetails = getItem
         }
         this.getTopping()
     },
     methods:{
-
          ...mapActions(['addCartItem','intoCart', 'getTopping']),
-
-
         //カートのボタン押されたらaddCartItemを呼び出し
         goCart(itemdetails){
-
             console.log('カートにGo!!');
             console.log(itemdetails);
-
             itemdetails.totalPrice = this.totalPrice;
             itemdetails.countM = this.countM;
             itemdetails.countL = this.countL;
