@@ -13,8 +13,6 @@
 
 </template>
 
-<script>
-</script>
 
 
 <style lang="scss">
@@ -40,7 +38,7 @@
 
 <script>
 import firebase from 'firebase'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Header from '@/components/Header.vue'
 
 export default{
@@ -62,6 +60,13 @@ created(){
   },
   methods:{
    ...mapActions(['setLoginUser','logout','deleteLoginUser','fecthCartItem'])
+  },
+  computed:{
+    test(){
+      console.log(this.cartItemList)
+      return 0
+    },
+    ...mapGetters(['cartItemList'])
   }
 }
 </script>

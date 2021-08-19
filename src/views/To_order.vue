@@ -9,29 +9,29 @@
     </p>
     <p>お届け先情報</p>
       <div>
-        お名前<input type="text" v-model="CustomerInfo.name">
+        お名前<input type="text" v-model="CustomerInfo.user">
       </div>
       <div>
-        メールアドレス<input type="text" v-model="CustomerInfo.email">
+        メールアドレス<input type="text" v-model="CustomerInfo.mail">
       </div>
       <div>
-        郵便番号<input type="text" v-model="CustomerInfo.zipaddress">
+        郵便番号<input type="text" v-model="CustomerInfo.addressNumber">
       </div>
       <div>
         住所<input type="text" v-model="CustomerInfo.address">
       </div>
       <div>
-        電話番号<input type="text" v-model="CustomerInfo.phone">
+        電話番号<input type="text" v-model="CustomerInfo.phoneNumber">
       </div>
  
       <div>
         配達日
-        <input type="date" v-model="CustomerInfo.orderdate">
+        <input type="date" v-model="CustomerInfo.orderDate">
       </div>
 
       <div>
         時間
-      <select v-model="CustomerInfo.ordertime">
+      <select v-model="CustomerInfo.orderTime">
         <option v-for="option in options" v-bind:value="option.value" :key="option.option_id">
               {{ option.text }}
         </option>
@@ -39,15 +39,12 @@
       </div>
         <div>
           <h1>お支払い方法</h1>
-
-
           <input type="radio" id="daibiki" value="1" v-model="CustomerInfo.status">
             <label for="daibiki">代金引換</label>
           <br>
           <input type="radio" id="credit" value="2" v-model="CustomerInfo.status">
           <label for="credit">クレジットカード</label>
           <br>
-                    
         </div>
         <button type="submit" @click="checkForm">注文する</button>
 
@@ -62,13 +59,13 @@ export default {
   data(){
    return {
     CustomerInfo:{
-    name:null,
-    email:null,
-    zipaddress:null,
-    address:null,
-    phone:null,
-    orderdate:null,
-    ordertime:null,
+    user: '佐藤',
+    mail: 'aaa@icloud.com',
+    addressNumber : '111-2222',
+    address: '東京都港区',
+    phoneNumber: '090-1111-2222',
+    orderDate:null,
+    orderTime:null,
     status:null,
      }
      ,
@@ -92,19 +89,19 @@ methods: {
     checkForm: function (e) {
       this.errors = [];
 
-      if (!this.CustomerInfo.name) {
+      if (!this.CustomerInfo.user) {
         this.errors.push("名前を入力してください");
       } //名前のバリデーション
 
-      if (!this.CustomerInfo.email) {
+      if (!this.CustomerInfo.mail) {
         this.errors.push('メールアドレスを入力してください');
-      } else if (!this.validEmail(this.CustomerInfo.email)) {
+      } else if (!this.validEmail(this.CustomerInfo.mail)) {
         this.errors.push('メールアドレスの形式が不正です');
       } //メールアドレスのバリデーション
 
-      if (!this.CustomerInfo.zipaddress) {
+      if (!this.CustomerInfo.addressNumber) {
         this.errors.push("郵便番号を入力して下さい");
-      } else if(!this.validZipaddress(this.CustomerInfo.zipaddress)){
+      } else if(!this.validZipaddress(this.CustomerInfo.addressNumber)){
        this.errors.push('郵便番号はXXX-XXXXの形式で入力してください');
       } //郵便番号のバリデーション
 
@@ -112,29 +109,29 @@ methods: {
         this.errors.push("住所を入力して下さい");
       }  //住所のバリデーション
 
-      if (!this.CustomerInfo.phone) {
+      if (!this.CustomerInfo.phoneNumber) {
         this.errors.push("電話番号を入力して下さい");
-      } else if(!this.validPhone(this.CustomerInfo.phone)){
+      } else if(!this.validPhone(this.CustomerInfo.phoneNumber)){
        this.errors.push('電話番号はXXXX-XXXX-XXXXの形式で入力してください');
       } //電話番号のバリデーション
 
-      if (!this.CustomerInfo.orderdate) {
+      if (!this.CustomerInfo.orderDate) {
         this.errors.push("配達日時を入力して下さい");
-      } else if(!this.validOrderdate(this.CustomerInfo.orderdate)){
+      } else if(!this.validOrderdate(this.CustomerInfo.orderDate)){
        this.errors.push('今から3時間後の日時をご入力ください');
       } //配達日時のバリデーション
 
-      if (!this.CustomerInfo.ordertime) {
+      if (!this.CustomerInfo.orderTime) {
         this.errors.push("配達日時を入力して下さい");
       } //配達日時のバリデーション
 
       if (!this.errors.length) {
-        this.addCustomerInfo(this.customerInfo);
+         e.preventDefault();
+        this.addCustomerInfo(this.CustomerInfo);
         this.$router.push({ name: "Done" });
         return true;
-        
       }
-      e.preventDefault();
+       e.preventDefault();
          
     },
 

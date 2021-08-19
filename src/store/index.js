@@ -33,7 +33,6 @@ export default new Vuex.Store({
     //商品一覧
     fetchItems(state, { item }) {
       state.coffeeList.push(item)
-      console.log(state.coffeeList)
     },
     //トッピングを取ってくる
     getTopping(state, { subItems }) {
@@ -64,6 +63,13 @@ export default new Vuex.Store({
       state.historyCart.id = id;
       state.historyCart.push(cartItem);
     },
+    deleteFromCart(state, cart) {
+      state.useCart.Items = cart.concat()
+    },
+    addCustomerInfo(state, customerInfo) {
+      state.historyCart.push(customerInfo)
+      state.useCart = {}
+    }
   },
   actions: {
     //ログイン
@@ -105,32 +111,46 @@ export default new Vuex.Store({
     },
     //ユーザーがログインしてたらカートに入れる処理
     addCartItem({ getters, commit, state }, selectItem) {
+      let usecartInfo = Object.assign({}, state.useCart)
       if (getters.uid) {
-        if (state.useCart == {}) {
-          firebase.firestore().collection(`users/${getters.uid}/carts`)
-            .add({
-              Items: [],
+        console.log(usecartInfo)
+        if (!Object.keys(usecartInfo).length) {
+          console.log('aaa')
+          const initState = {
+              Items: [selectItem],
               address: '',
               orderID: '',
+              orderTime: '',
               user: '',
               addressNumber: '',
               mail: '',
               orderDate: '',
               phoneNumber: '',
               status: 0,
-            }).then(doc => {
-              commit('useCart', { id: doc.id, cartItem: doc.data() })
-            })
+            }
+          firebase.firestore().collection(`users/${getters.uid}/carts`)
+            .add(initState).then(doc => {
+               commit('useCart', { id: doc.id, cartItem: initState })   
+              })
         } else {
-          let usecartInfo = Object.assign({}, state.useCart)
+          // let usecartInfo = Object.assign({}, state.useCart)
           usecartInfo.Items = state.useCart.Items.slice()
           usecartInfo.Items.push(selectItem)
-          // console.log(usecartInfo)
-          // console.log(selectItem)
+          console.log(usecartInfo.Items)
+          console.log(getters.uid)
+          console.log(selectItem)
+          // let hairetsu = usecartInfo.Items.concat().slice(1, -1) 
           firebase.firestore().collection(`users/${getters.uid}/carts`)
             .doc(usecartInfo.orderID).update(usecartInfo)
           commit('updateCart', { selectItem })
         }
+      }
+    },
+    deleteInCart({ state, getters, commit }, cart){
+      if(getters.uid){
+        firebase.firestore().collection(`users/${getters.uid}/carts`)
+            .doc(state.useCart.orderID).update({ Items: cart})
+          commit('deleteFromCart', cart)
       }
     },
     //カート情報とってくる(App.vue)
@@ -149,12 +169,22 @@ export default new Vuex.Store({
           })
         })
     },
+    //注文ボタンの後に実行される
+    addCustomerInfo({ state,getters, commit }, customerInfo) {
+      let CI = Object.assign({}, customerInfo)
+      CI.Items = state.useCart.Items
+      console.log(state.useCart.Items)
+      console.log(CI)
+      firebase.firestore().collection(`users/${getters.uid}/carts`)
+        .doc(state.useCart.orderID).update(CI)
+          commit('addCustomerInfo', CI)
+    }
   },
 
   getters: {
     //coffeeListのidとparams.idが一致したものを返す
     getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
     uid: (state) => (state.login_user ? state.login_user.uid : null),
-    cartItemList: (state) => state.cartList
+    cartItemList: (state) => state.useCart,
   }
 })

@@ -1,76 +1,88 @@
 <template>
-    <div id="confirm">
+    <div>
         <h1>注文内容確認</h1>
-        <table v-if="cartItems.length" border="1">
-            <thead>
-            <tr>
-                <th>商品名</th>
-                <th>サイズ</th>
-                <th>数量</th>
-                <th>トッピング</th>
-                <th>小計(税込)</th>
-                <th>削除</th>
-            </tr>
-            </thead>
-            <tbody v-for="(item, index) in cartItems" :key="index">
-                <tr v-for="(item2, index) in item" :key="index">
-                <td><img :src="item2.imageURL"><div>{{item2.name}}</div></td>
-                <td>{{item.countM}} </td>
-                <td>M：{{item.countM}}個/L：{{item.countL}}個</td>
-                 <td><div v-for="(tops, index) in item2.topping" :key="index">{{tops}}</div></td>
-                <td>{{item2.totalPrice}}円</td>
-                <td><button @click="deleteConfirm(id)">削除</button></td>
-            </tr>
-            </tbody>
-        </table>
-            <!-- <h1>合計金額：{{ sumPrice }}</h1> -->
-        <!-- ※注文画面へのリンク作成※ -->
-            <button @click="check(cartItems)">この内容で注文する</button>
+        <!-- <div v-if="this.cartContent.length === 0">
+            <h1>カートに商品がありません!!</h1>
+        </div> -->
+        <!-- <div v-if="this.cartContent.length >= 1"> -->
+                <table border="1">
+                    <tr v-for="cart in cartContent" :key="cart.id">
+                        <!-- <td v-for="(topping, index) in cart.choseToopings" :key="t"> -->
+                            <!-- <img :src="cart.imageURL"> -->
+                            <p>商品名：{{ getItem(cart.id).name }}</p>
+                            <p>小計:{{cart.totalPrice}}</p>
+                            <div>
+                                <router-link :to="{ name:'Toorder'}"><button @click="Buy(cart)" style="width:300px">ユーザー情報入力</button></router-link>
+                            </div>
+                            <div>
+                            </div>
+                        <!-- </td> -->
+                    </tr>
+                    <tr>
+                        <td>
+                            <h2>ご注文金額合計：{{ sumPrice }}</h2>
+
+                            <div>
+                            </div>
+
+                        </td>
+                    </tr>
+
+                </table>
+
+
+        <!-- </div> -->
+        
+
+
     </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
 
-export default{
-    name: 'confirm',
+export default {
     data(){
-        return {
-            cartItems: [],
-            total:''
+        return{
+            //{ ID: 1, name: 'Gorgeous4サンド', contents: '人気の定番具材「ハム」と「チキン」をセットにした食べごたえ抜群のサンドイッチです', priceM: 480, priceL: 700, imageURL: require('@/assets/img_coffee/1.jpg') },
         }
     },
+
     methods:{
-        deleteConfirm(id){
+        ...mapActions(['BuyInCart','DeleteInCart']),
+
+        Buy(){
+            console.log('購入ボタンが押されました！');
+            this.cartSample();
+        },
+         deleteConfirm(id){
             if(confirm("削除してもよろしいですか？")){
                 this.deleteCartItem({id})
             }
         },
-       check(){
-            if(this.uid){
-                // this.addOrderList(this.cartItems)
-                //ユーザー情報入力画面に移行
-                this.$router.push({name:'Toorder'})
-                console.log(this.cartItems)
-            }else if(!this.uid){
-                this.login()
-                // this.addOrderList(this.carts)
-                this.$router.push({name:'Toorder'})
-            }
-        },
-        ...mapActions(['detailChangeCart'])
-    },
-    created(){
-        //storeのカートリストをcartItemsにpush
-        // this.detailChangeCart()
-        this.cartItems.push(this.cartItemList)
-        console.log(this.cartItems)
     },
     computed:{
-        ...mapGetters(['cartItemList', 'uid', ]),
-
+        cartContent(){
+            if(this.$store.state.useCart.Items){
+                 return this.$store.state.useCart.Items.concat();      
+            }
+            return []
+        },
+        sumPrice(){
+            return this.cartContent.reduce((a,c) => a + c.totalPrice, 0)
+        },
+       ...mapGetters(['getItem'])
+        
     }
+
+   
+
+
+    
+
+
 }
 
 
-</script> 
+
+</script>

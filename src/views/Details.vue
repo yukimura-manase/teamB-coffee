@@ -68,7 +68,7 @@ export default {
             let selectItems = {
                 id: this.$route.params.id,
                 itemCount: this.itemCount,
-                totalPrice: this.totalPrice,
+                totalPrice: this.totalPrice(),
                 //MかL
                 itemSize: this.countSize,
                 // 選ばれたトッピング
