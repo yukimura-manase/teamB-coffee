@@ -1,48 +1,36 @@
 <template>
     <div>
-        <div>カート</div>
-        <!-- <div v-if="this.cartContent.length === 0">
-            <h1>カートに商品がありません!!</h1>
-        </div> -->
-        <!-- <div v-if="this.cartContent.length >= 1"> -->
+        <h1>ショッピングカート</h1>
+        
+        <div v-if="!$store.state.login_user">カートを見るにはログインが必要です。</div>
+
             <h2 v-if="$store.state.login_user">{{$store.state.login_user.displayName}}さんのカート</h2>
+            
             <div v-if="$store.state.login_user">
 
-                <div>
-                    
-                </div>
-                <table border="1" align = 'center' >
-                    <tr v-for="(cart, index) in cartContent" :key="cart.id">
+                <table border="1" align = 'center'>
+
+                    <tr v-for="(cart, index) in cartContent" :key="cart.id" >
                        
                             <p>商品名：{{ getItem(cart.id).name }}</p>
-                            <p>小計:{{cart.totalPrice}}</p>
-
-                            <div>
-                                
-
-                            <div>
-                                <router-link :to="{ name: 'Toorder'}"><button style="width:300px">すべて購入する！</button></router-link>
-                            </div>
-
-                            </div>
+                            <p>サイズ：{{cart.itemSize}}</p>
+                            <p>追加トッピング：{{cart.choseToppings}}</p>
+                            <p>個数:{{cart.itemCount}}個</p>
+                            <p>小計:{{cart.totalPrice}}円</p>
 
                             <div>
                                 <button @click="deleteCart(index)" style="width:300px">カートから削除する！</button>
                             </div>
-                       
                     </tr>
-                    <tr>
-
-                    </tr>
-
                 </table>
+
                 <h2>ご注文金額合計：{{ sumPrice }}</h2>
 
+                <div>
+                    <router-link :to="{ name: 'Confirm'}"><button style="width:300px">すべて購入する！</button></router-link>
+                </div>
+
             </div>
-
-        <!-- </div> -->
-        
-
 
     </div>
 </template>

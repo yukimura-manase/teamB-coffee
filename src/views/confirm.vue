@@ -7,24 +7,25 @@
         <!-- <div v-if="this.cartContent.length >= 1"> -->
                 <table border="1">
                     <tr v-for="cart in cartContent" :key="cart.id">
-                        <!-- <td v-for="(topping, index) in cart.choseToopings" :key="t"> -->
-                            <!-- <img :src="cart.imageURL"> -->
+                        <td>
                             <p>商品名：{{ getItem(cart.id).name }}</p>
-                            <p>小計:{{cart.totalPrice}}</p>
-
                             <p>サイズ：{{cart.itemSize}}</p>
-                            <p>追加トッピング：{{cart.choseToppings}}</p>
+                            <p>追加トッピング：{{cart.choeseToppings}}</p>
+                            <p>個数:{{cart.itemCount}}個</p>
+                            <p>小計:{{cart.totalPrice}}円</p>
                             <div>
-                                <router-link :to="{ name:'Toorder'}"><button @click="Buy(cart)" style="width:300px">ユーザー情報入力</button></router-link>
+                                <!-- <router-link :to="{ name:'Toorder'}"><button @click="Buy(cart)" style="width:300px">ユーザー情報入力</button></router-link> -->
                             </div>
                             <div>
                             </div>
+                        </td>
                         <!-- </td> -->
                     </tr>
                     <tr>
                         <td>
-                            <h2>ご注文金額合計：{{ sumPrice }}</h2>
-
+                            <h2>ご注文金額合計：{{ sumPrice }}円</h2>
+                                <router-link :to="{ name:'Toorder'}"><button @click="Buy(cart)" style="width:300px">ユーザー情報入力へ</button></router-link>
+                                
                             <div>
                             </div>
 
@@ -32,6 +33,7 @@
                     </tr>
 
                 </table>
+                
 
 
         <!-- </div> -->
