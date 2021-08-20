@@ -7,32 +7,36 @@
         <!-- <div v-if="this.cartContent.length >= 1"> -->
             <h2 v-if="$store.state.login_user">{{$store.state.login_user.displayName}}さんのカート</h2>
             <div v-if="$store.state.login_user">
-                <table border="1">
+
+                <div>
+                    
+                </div>
+                <table border="1" align = 'center' >
                     <tr v-for="(cart, index) in cartContent" :key="cart.id">
-                        <!-- <td v-for="(topping, index) in cart.choseToopings" :key="t"> -->
-                            <!-- <img :src="cart.imageURL"> -->
+                       
                             <p>商品名：{{ getItem(cart.id).name }}</p>
                             <p>小計:{{cart.totalPrice}}</p>
+
                             <div>
                                 
-                            </div>
-                            <div>
-                                <button @click="deleteCart(index)" style="width:300px">カートから削除する！</button>
-                            </div>
-                        <!-- </td> -->
-                    </tr>
-                    <tr>
-                        <td>
-                            <h2>ご注文金額合計：{{ sumPrice }}</h2>
 
                             <div>
                                 <router-link :to="{ name: 'Toorder'}"><button style="width:300px">すべて購入する！</button></router-link>
                             </div>
 
-                        </td>
+                            </div>
+
+                            <div>
+                                <button @click="deleteCart(index)" style="width:300px">カートから削除する！</button>
+                            </div>
+                       
+                    </tr>
+                    <tr>
+
                     </tr>
 
                 </table>
+                <h2>ご注文金額合計：{{ sumPrice }}</h2>
 
             </div>
 

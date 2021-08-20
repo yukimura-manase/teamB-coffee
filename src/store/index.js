@@ -33,6 +33,8 @@ export default new Vuex.Store({
     //商品一覧
     fetchItems(state, { item }) {
       state.coffeeList.push(item)
+      console.log('コーヒー一覧')
+      console.log(state.coffeeList)
     },
     //トッピングを取ってくる
     getTopping(state, { subItems }) {

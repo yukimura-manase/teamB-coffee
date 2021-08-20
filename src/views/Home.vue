@@ -3,34 +3,36 @@
       <!-- <button @click="logout" v-if="$store.state.login_user">ログアウト</button>
       <button @click="login" v-else>ログイン</button>
     <img :src="url"> -->
-    <h1>コーヒーの商品検索</h1>
-    <input type="text" v-model="search">
-    <button>検索</button>
+
+  <h1>コーヒー・ショピングサイト</h1>
+    <input type="text" v-model="search" style="width:300px; height:20px;">
+    <button style="margin-left:20px">検索</button>
     <!-- v-on click -->
-    <table border="1">
-      <thead>
-        <tr>
-          <!-- <th>ID</th> -->
-          <th>商品名</th>
-          <th>商品説明</th>
-          <th>価格(M)</th>
-          <th>価格(L)</th>
-          <th>イメージ</th>
-          <th>商品詳細</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in getlist " :key="item.id">
-          <!-- <th>{{item.ID}}</th> -->
-          <th>{{item.name}}</th>
-          <th>{{item.contents}}</th>
-          <th>{{item.priceM}}円</th>
-          <th>{{item.priceL}}円</th>
-          <th><img :src="item.imageURL"></th>
-          <th><router-link :to="{name: 'Details',params:{id:item.ID}}"><button>商品詳細へ</button></router-link></th>
-        </tr>
+
+
+  <div class="container">
+    
+  <div class="container1">
+
+    <table  style="margin-top:30px ;" align = 'center'>
+
+      <tbody v-for="item in getlist " :key="item.id" style="font-size: 20px;">
+        <tr><img :src="item.imageURL" @click="submit(item)" class="coffee"></tr>
+          <tr><th class="nowrap">{{item.name}}</th></tr>
+          <tr><th>{{item.priceM}}円</th></tr>
+          <tr><th>{{item.priceL}}円</th></tr>
+          <tr><th class="nowrap"><router-link :to="{name: 'Details',params:{id:item.ID}}"><button class="button">商品詳細へ</button></router-link></th></tr>
       </tbody>
+
     </table>
+
+  </div>
+
+  </div>
+
+
+    
+    
   </div>
 </template>
 
@@ -39,6 +41,9 @@
   export default{
     methods:{
       ...mapActions(["login","logout","fetchItems"]),
+      submit(id){
+          this.$router.push({name:"Details",params:{id}})//省略id:idと同じ
+        },
     },
     data(){
       return {
@@ -61,3 +66,44 @@
   }
 
 </script>
+
+<style>
+table{
+  border-collapse: collapse;
+  display:flex;
+  
+  flex-wrap: wrap;
+  
+}
+.container{
+  display:flex;
+  background-color: rgb(253, 249, 239);
+  flex-wrap: wrap;
+  padding: 150px;
+}
+.container1{
+  margin: 2px;
+  align-content: stretch;
+}
+
+th, td {
+  border: solid 1px #333;
+}
+.nowrap {
+  white-space: nowrap;
+}
+
+.button {
+  padding:30px;
+  color :#333;
+  font-size: 16px;
+  font-weight: bold;
+  background: whitesmoke;
+  padding: 18px 30px;
+  border-radius: 6px;
+  transition: .3s;
+}
+button:hover{
+  opacity: 0.6; 
+} 
+</style>

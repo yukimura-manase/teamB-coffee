@@ -2,11 +2,10 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">Home</router-link> |
-      <router-link to="/cart">買い物かご</router-link> |
-      <router-link to="/confirm">confirm</router-link>
+      <router-link to="/cart">買い物かご</router-link>
     </div>
 
-    <div><Header /></div>
+    <div style="margin:50px"><Header /></div>
 
     <router-view/>
   </div>
@@ -22,6 +21,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  
 }
 
 #nav {
@@ -42,11 +42,15 @@ import { mapActions, mapGetters } from 'vuex'
 import Header from '@/components/Header.vue'
 
 export default{
+
+
   
 components:{
     Header
   },
 created(){
+
+    this.$router.push('/');
 
     firebase.auth().onAuthStateChanged(user =>{ //リダイレクト後
       if(user){

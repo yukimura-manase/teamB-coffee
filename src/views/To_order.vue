@@ -112,18 +112,18 @@ methods: {
       if (!this.CustomerInfo.phoneNumber) {
         this.errors.push("電話番号を入力して下さい");
       } else if(!this.validPhone(this.CustomerInfo.phoneNumber)){
-       this.errors.push('電話番号はXXXX-XXXX-XXXXの形式で入力してください');
+       this.errors.push('電話番号はXXX-XXXX-XXXXの形式で入力してください');
       } //電話番号のバリデーション
 
       if (!this.CustomerInfo.orderDate) {
-        this.errors.push("配達日時を入力して下さい");
+        this.errors.push("配達日を入力して下さい");
       } else if(!this.validOrderdate(this.CustomerInfo.orderDate)){
        this.errors.push('今から3時間後の日時をご入力ください');
       } //配達日時のバリデーション
 
       if (!this.CustomerInfo.orderTime) {
-        this.errors.push("配達日時を入力して下さい");
-      } //配達日時のバリデーション
+        this.errors.push("配達時間を入力して下さい");
+      } //配達時間のバリデーション
 
       if (!this.errors.length) {
          e.preventDefault();

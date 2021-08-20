@@ -11,6 +11,9 @@
                             <!-- <img :src="cart.imageURL"> -->
                             <p>商品名：{{ getItem(cart.id).name }}</p>
                             <p>小計:{{cart.totalPrice}}</p>
+
+                            <p>サイズ：{{cart.itemSize}}</p>
+                            <p>追加トッピング：{{cart.choseToppings}}</p>
                             <div>
                                 <router-link :to="{ name:'Toorder'}"><button @click="Buy(cart)" style="width:300px">ユーザー情報入力</button></router-link>
                             </div>
