@@ -16,6 +16,7 @@ const routes = [
     component: Home
   },
   {
+    // パラメーターとして「id」を持たせている！
     path: '/details/:id',
     name: 'Details',
     // route level code-splitting

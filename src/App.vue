@@ -44,19 +44,21 @@ import Header from '@/components/Header.vue'
 export default{
 
 
-  
+// 子コンポーネントとして登録
 components:{
     Header
   },
 created(){
 
-    this.$router.push('/');
+    this.$router.push('/'); // アプリレンダリング時にhomeにpush！
 
+    // ログイン処理起動後のリダイレクト時のみ発動する。
     firebase.auth().onAuthStateChanged(user =>{ //リダイレクト後
       if(user){
         this.setLoginUser(user) //ログインユーザー情報をセット
 
         this.fecthCartItem() // ログインユーザーのcartItemを追加する！
+
         }else{
           this.deleteLoginUser() //ログインユーザー情報を削除
           this.$router.push({name: 'Home'})
@@ -67,9 +69,9 @@ created(){
    ...mapActions(['setLoginUser','logout','deleteLoginUser','fecthCartItem'])
   },
   computed:{
-    test(){
+    test(){ // 動作確認のためのcomputed
       console.log(this.cartItemList)
-      return 0
+      return 0 
     },
     ...mapGetters(['cartItemList'])
   }

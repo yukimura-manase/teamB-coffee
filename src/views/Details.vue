@@ -12,12 +12,6 @@
              </tr>
 
              <tr>
-                 <td>
-                     
-                 </td>
-             </tr>
-
-             <tr>
                 <td>
                     <div><h3>【商品サイズ】</h3></div>
                     <input type="radio" v-model="countSize" value="M"><span style="font-size:25px;">M</span>
@@ -73,12 +67,15 @@ export default {
             id: 0,
         }
     },
-    created(){
-        //this.$route.params.idは選択された商品のid
+    created(){ // 前提として、Home画面から、params:{id:item.ID}で選択商品のidが送られている！
+        
         //gettersによってstateの配列のなかからidが一致したデータを取得
-        const getItem = this.$store.getters.getItem(this.$route.params.id);
+        const getItem = this.$store.getters.getItem(this.$route.params.id); //this.$route.params.idは選択された商品のid
+
         console.log(getItem)
+
         if(getItem){
+
             this.itemdetails = getItem
         }
         this.getTopping()
@@ -102,15 +99,16 @@ export default {
         totalPrice(){
             if(this.countSize ==='M'){
                  let total = (this.itemdetails.priceM * this.itemCount +this.choseToppings.length * 200) * 1.1
-                return Math.floor(total)
+                return Math.floor(total) // 計算結果から小数点を省く！
             }else if(this.countSize ==='L'){
                  let total=(this.itemdetails.priceL * this.itemCount + this.choseToppings.length *300) * 1.1
                 return Math.floor(total)
             }
         },
     },
-    computed:{
-        ...mapState(['toppings'])
+    computed:{ // stateの値をそのまま利用したいのなら、mapStateヘルパーを使うのも1つの手段！ 
+    // computedに書くから、プロパティとして利用できる！
+        ...mapState(['toppings']) // toppingsをstateから持ってくる！
     }
 }
 

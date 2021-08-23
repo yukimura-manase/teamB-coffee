@@ -9,16 +9,17 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 
   state: {
-    //商品リスト
-    coffeeList: [],
-    // /トッピングリスト
-    toppings: [],
+    
+    coffeeList: [], //商品(コーヒー)のリスト
+   
+    toppings: [],  // トッピングリスト
+
     login_user: null,
-    // 複数のカート情報が入る配列 => 商品情報が複数入る！
-    //現在使ってるカート情報
-    useCart: {},
-    //履歴(ステータスが0以外のものが入ってる)購入ずみ
-    historyCart: [],
+    
+    
+    useCart: {}, // 現在使ってるカート情報 => status0
+    
+    historyCart: [], //購入ずみのカートたち => status0以外
   },
 
   mutations: {
@@ -30,17 +31,20 @@ export default new Vuex.Store({
     deleteLoginUser(state) {
       state.login_user = null
     },
-    //商品一覧
+    //DBから取ってきた商品情報をセットする！ // fetch => 取って参る！
     fetchItems(state, { item }) {
-      state.coffeeList.push(item)
-      console.log('コーヒー一覧')
-      console.log(state.coffeeList)
+      state.coffeeList.push(item) // itemは1つの商品情報であり、オブジェクト
+      //  console.log('コーヒー一覧')
+      //  console.log(state.coffeeList)
     },
     //トッピングを取ってくる
-    getTopping(state, { subItems }) {
+    getTopping(state, { subItems }) { // subItemsを分割代入している！
       state.toppings.push(subItems)
+      // console.log('トッピング一覧')
       // console.log(state.toppings)
     },
+
+    // カートを追加する処理
     addCartItem(state, { id, cartItem }) {
       state.cartItem.id = id;
       // console.log(cartItem);
@@ -56,64 +60,81 @@ export default new Vuex.Store({
       console.log('detailChangeCart完了！');
       console.log(state.cartList);
     },
+
     useCart(state, { id, cartItem }) {
       state.useCart = cartItem;
       state.useCart.orderID = id;
+      console.log('useCart')
       console.log(state.useCart);
     },
+
     historyCart(state, { id, cartItem }) {
       state.historyCart.id = id;
       state.historyCart.push(cartItem);
     },
+
     deleteFromCart(state, cart) {
       state.useCart.Items = cart.concat()
     },
+
     addCustomerInfo(state, customerInfo) {
       state.historyCart.push(customerInfo)
       state.useCart = {}
     }
   },
+
+
   actions: {
-    //ログイン
+    //ログインユーザーの情報をセットする！
     setLoginUser({ commit }, user) {
-      console.log('setLoginUser動いているよ！！'),
         commit('setLoginUser', user)
     },
-    //ログイン
+    //ログイン時のリダイレクト処理を呼び出す。
     login() {
       //Googleプロジェクトオブジェクトのインスタンスの作成
       const google_auth_provider = new firebase.auth.GoogleAuthProvider()
       //ログインページ（google）のにリダイレクトしてログインする為のコード
       firebase.auth().signInWithRedirect(google_auth_provider)
     },
+    //ログアウト
     logout() {
       firebase.auth().signOut()
     },
     deleteLoginUser({ commit }) {
       commit('deleteLoginUser')
     },
-    //商品リスト
+
+    //商品データをデータベースから取ってくる処理 => Home.vueで起動！
     fetchItems({ commit }) {
       this.state.coffeeList = [] // 初期化
-      //商品リストをfirestoreから持ってくる
-      firebase.firestore().collection(`/Items`)
-        .get().then(snapshot => {
-          snapshot.forEach(doc =>
-            commit('fetchItems', { item: doc.data() }))
+      
+      firebase.firestore().collection(`/Items`) //商品リストをfirestoreから持ってくる！
+        .get()
+        
+        .then(snapshot => {
+          console.log('snapshotの中身')
+          console.log(snapshot)
+
+          snapshot.forEach(doc => // 18回回転しているから改善したほうがいいかもしれない！
+            commit('fetchItems', { item: doc.data() }) // itemキーにdoc.data()をセットする。 // 18回回転しているから改善したほうがいいかもしれない！
+            )
         })
     },
+
     //トッピングを持ってくる
     getTopping({ commit }) {
-      this.state.toppings = []
+      this.state.toppings = [] // 初期化
       firebase.firestore().collection(`/subItems`).get()
         .then(snapshot => {
           snapshot.forEach(doc =>
             commit('getTopping', { subItems: doc.data() }))
         })
     },
+
     //ユーザーがログインしてたらカートに入れる処理
     addCartItem({ getters, commit, state }, selectItem) {
-      let usecartInfo = Object.assign({}, state.useCart)
+      let usecartInfo = Object.assign({}, state.useCart) // 
+
       if (getters.uid) {
         console.log(usecartInfo)
         if (!Object.keys(usecartInfo).length) {
@@ -131,7 +152,8 @@ export default new Vuex.Store({
               status: 0,
             }
           firebase.firestore().collection(`users/${getters.uid}/carts`)
-            .add(initState).then(doc => {
+            .add(initState)
+            .then(doc => {
                commit('useCart', { id: doc.id, cartItem: initState })   
               })
         } else {
@@ -183,10 +205,24 @@ export default new Vuex.Store({
     }
   },
 
-  getters: {
-    //coffeeListのidとparams.idが一致したものを返す
-    getItem: (state) => (id) => state.coffeeList.find((product) => product.ID === id),
+  // gettersはcomputedに似ている！ => いろいろなところで、プロパティ(key)のように呼び出して使える！
+  // 2つのアクセススタイルを持つ！ => 「プロパティアクセススタイル」と「メソッドアクセススタイル」
+  getters: { 
+
+    // <超重要 mutaitionsとgettersの違い！>
+    // gettersは、stateのデータを使って、新しいデータを作成する・加工処理する！ => stateのデータの内容は変わらない！
+    // mutationsは、stateのデータを変更する・更新する・書き換える！ => stateのデータの内容が変わる！
+
+    // <メソッドスタイルアクセス> => 引数を渡すことができます。
+    // 関数を返り値にすることで、getterに引数を渡すこともできます。これは特にストアの中の配列を検索する時に役立ちます。
+
+    // stateの中から、特定のIDのコーヒーをgetする処理
+    getItem: (state) => (id) => state.coffeeList.find( product => product.ID === id), 
+
+    // stateのログインユーザーをセット
     uid: (state) => (state.login_user ? state.login_user.uid : null),
+
+    // stateのuserCartをセット
     cartItemList: (state) => state.useCart,
   }
 })

@@ -6,7 +6,7 @@
 
   <h1>コーヒー・ショピングサイト</h1>
     <input type="text" v-model="search" style="width:300px; height:20px;">
-    <button style="margin-left:20px">検索</button>
+    <button style="margin-left:20px" >検索</button>
     <!-- v-on click -->
 
 
@@ -16,8 +16,9 @@
 
     <table  style="margin-top:30px ;" align = 'center'>
 
-      <tbody v-for="item in getlist " :key="item.id" style="font-size: 20px;">
-        <tr><img :src="item.imageURL" @click="submit(item)" class="coffee"></tr>
+      <!-- searchMacthは、computedプロパティ -->
+      <tbody v-for="item in searchMacth " :key="item.id" style="font-size: 20px;">
+        <tr><img :src="item.imageURL" @click="imageLink(item)" class="coffee"></tr>
           <tr><th class="nowrap">{{item.name}}</th></tr>
           <tr><th>{{item.priceM}}円</th></tr>
           <tr><th>{{item.priceL}}円</th></tr>
@@ -36,14 +37,16 @@
   </div>
 </template>
 
-<script>
+<script> // homeであり、コーヒーの商品一覧表示
   import { mapActions } from "vuex";
   export default{
     methods:{
       ...mapActions(["login","logout","fetchItems"]),
-      submit(id){
-          this.$router.push({name:"Details",params:{id}})//省略id:idと同じ
+
+      imageLink(item){ // 画面遷移&パラメーターを渡している！
+          this.$router.push({name:"Details",params:{id:item.ID}}) // パラメータに該当商品のIDをセットする！
         },
+
     },
     data(){
       return {
@@ -53,13 +56,20 @@
       }
     },
       created(){
-      this.fetchItems()
+      this.fetchItems() // 画面生成時には、商品たちを取って参る！ => Storeに保存
     },
+
+   
     computed:{
-      getlist(){
-        const coffeeList  = this.$store.state.coffeeList
-        return coffeeList.filter((item) => {
-        return item.name.match(this.search)
+
+      searchMacth(){  //商品リストをセットする&検索機能 => コーヒー配列そのものに化ける！
+        const coffeeList  = this.$store.state.coffeeList // コーヒーリストを格納している。
+
+        return coffeeList.filter((item) => { // filterで配列の中にある値を取り出して、matchするもので配列を再生成する！
+
+        // 呼び出し元にmatchした値を返す！ => filterがmatch関数の処理を呼び出している！ => コールバック関数
+        return item.name.match(this.search) //String.prototype.match() => 文字列型の一致するものを返す！
+
       })
       }
     }
